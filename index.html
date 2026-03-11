@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LearnFlow — Online Course Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161e;
+    --border: #1e1e2e;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --gold: #f5c542;
+    --radius: 12px;
+    --font-display: 'Clash Display', sans-serif;
+    --font-body: 'Satoshi', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--border); background: rgba(10,10,15,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+  .nav-actions { display: flex; gap: 12px; align-items: center; }
+  .btn { padding: 10px 22px; border-radius: 8px; font-family: var(--font-body); font-weight: 500; font-size: 14px; cursor: pointer; border: none; transition: all 0.2s; letter-spacing: 0.2px; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), #8b83ff); color: #fff; box-shadow: 0 4px 20px rgba(108,99,255,0.35); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(108,99,255,0.5); }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-ghost { background: transparent; color: var(--muted); }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-danger { background: #ff4757; color: #fff; }
+  .btn-success { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #0a0a0f; font-weight: 700; }
+  .btn-success:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(67,233,123,0.4); }
+  .btn-sm { padding: 7px 14px; font-size: 13px; }
+  .btn-lg { padding: 14px 32px; font-size: 16px; }
+  .btn-full { width: 100%; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 7px; font-weight: 500; letter-spacing: 0.3px; }
+  .form-input { width: 100%; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-body); font-size: 14px; transition: border-color 0.2s; outline: none; }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--muted); }
+  textarea.form-input { resize: vertical; min-height: 90px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-purple { background: rgba(108,99,255,0.15); color: var(--accent); border: 1px solid rgba(108,99,255,0.3); }
+  .badge-green { background: rgba(67,233,123,0.12); color: var(--accent3); border: 1px solid rgba(67,233,123,0.25); }
+  .badge-gold { background: rgba(245,197,66,0.12); color: var(--gold); border: 1px solid rgba(245,197,66,0.25); }
+  .badge-red { background: rgba(255,101,132,0.12); color: var(--accent2); border: 1px solid rgba(255,101,132,0.25); }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.6s ease; }
+  #toast { position: fixed; bottom: 28px; right: 28px; padding: 14px 22px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; z-index: 99999; transform: translateY(80px); opacity: 0; transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { border-color: var(--accent3); color: var(--accent3); }
+  #toast.error { border-color: var(--accent2); color: var(--accent2); }
+  #toast.info { border-color: var(--accent); color: var(--accent); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 100%; max-width: 520px; animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); max-height: 90vh; overflow-y: auto; }
+  @keyframes modalIn { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+  .modal-title { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .modal-sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  #authScreen { align-items: center; justify-content: center; background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 70%); padding: 20px; }
+  .auth-box { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; }
+  .auth-logo { font-family: var(--font-display); font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  .auth-tagline { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+  .auth-tabs { display: flex; gap: 4px; background: var(--surface); border-radius: 8px; padding: 4px; margin-bottom: 28px; }
+  .auth-tab { flex: 1; padding: 9px; border-radius: 6px; border: none; background: transparent; color: var(--muted); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .auth-tab.active { background: var(--card); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  #dashScreen { flex-direction: column; }
+  .dash-layout { display: flex; flex: 1; min-height: calc(100vh - 61px); }
+  .sidebar { width: 240px; background: var(--surface); border-right: 1px solid var(--border); padding: 24px 16px; flex-shrink: 0; }
+  .sidebar-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 0 10px; margin-bottom: 8px; }
+  .sidebar-section { margin-bottom: 28px; }
+  .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; color: var(--muted); font-size: 14px; font-weight: 500; transition: all 0.15s; border: none; background: transparent; width: 100%; text-align: left; }
+  .sidebar-item:hover { background: var(--card); color: var(--text); }
+  .sidebar-item.active { background: rgba(108,99,255,0.12); color: var(--accent); }
+  .sidebar-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0; }
+  .main-content { flex: 1; padding: 32px; overflow-y: auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-header { margin-bottom: 28px; }
+  .page-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .page-sub { color: var(--muted); font-size: 15px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .stat-icon { font-size: 24px; margin-bottom: 12px; }
+  .stat-val { font-family: var(--font-display); font-size: 30px; font-weight: 700; margin-bottom: 4px; }
+  .stat-label { font-size: 13px; color: var(--muted); }
+  .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .course-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+  .course-card:hover { transform: translateY(-3px); border-color: rgba(108,99,255,0.4); }
+  .course-thumb { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 56px; position: relative; }
+  .course-body { padding: 18px; }
+  .course-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .course-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+  .course-meta { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .course-price { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--accent3); }
+  #playerScreen { flex-direction: column; }
+  .player-layout { display: flex; flex: 1; }
+  .video-area { flex: 1; padding: 24px; }
+  .video-wrapper { background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .video-placeholder { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--muted); }
+  .play-btn { width: 72px; height: 72px; border-radius: 50%; background: rgba(108,99,255,0.9); display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: transform 0.2s; }
+  .play-btn:hover { transform: scale(1.1); }
+  .modules-panel { width: 340px; background: var(--surface); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+  .modules-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+  .module-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 8px; cursor: pointer; transition: background 0.15s; border: 1px solid transparent; margin-bottom: 6px; }
+  .module-item:hover { background: var(--card); }
+  .module-item.active { background: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); }
+  .module-num { width: 32px; height: 32px; border-radius: 8px; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; color: var(--muted); }
+  .module-item.completed .module-num { background: rgba(67,233,123,0.15); color: var(--accent3); }
+  .module-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .module-dur { font-size: 12px; color: var(--muted); }
+  .upload-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 40px 24px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: rgba(108,99,255,0.05); }
+  .upload-icon { font-size: 36px; margin-bottom: 10px; }
+  .upload-text { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .upload-sub { font-size: 13px; color: var(--muted); }
+  .module-list-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+  .module-list-item .drag-handle { cursor: grab; color: var(--muted); font-size: 16px; }
+  .module-list-item .mod-info { flex: 1; }
+  .price-display { text-align: center; padding: 28px; background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.1)); border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .price-amount { font-family: var(--font-display); font-size: 48px; font-weight: 700; }
+  .price-course { font-size: 15px; color: var(--muted); margin-top: 4px; }
+  .rzp-logo { display: flex; align-items: center; gap: 8px; justify-content: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .profile-header { display: flex; align-items: center; gap: 20px; padding: 28px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 24px; }
+  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+  td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid rgba(30,30,46,0.5); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .flex { display: flex; }
+  .flex-between { display: flex; align-items: center; justify-content: space-between; }
+  .flex-center { display: flex; align-items: center; justify-content: center; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .mb-4 { margin-bottom: 4px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mb-32 { margin-bottom: 32px; }
+  .text-muted { color: var(--muted); }
+  .text-sm { font-size: 13px; }
+  .text-accent { color: var(--accent); }
+  .text-green { color: var(--accent3); }
+  .font-display { font-family: var(--font-display); }
+  .bold { font-weight: 700; }
+  .section-divider { height: 1px; background: var(--border); margin: 24px 0; }
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-text { font-size: 15px; font-weight: 500; margin-bottom: 4px; color: var(--text); }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  .tab { padding: 10px 18px; border: none; background: transparent; color: var(--muted); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .gradient-orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.1; pointer-events: none; z-index: 0; animation: float 8s ease-in-out infinite; }
+  .orb1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; }
+  .orb2 { width: 300px; height: 300px; background: var(--accent2); bottom: -100px; right: -50px; animation-delay: 3s; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main-content { padding: 16px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .modules-panel { width: 100%; border-left: none; border-top: 1px solid var(--border); }
+    .player-layout { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gradient-orb orb1"></div>
+<div class="gradient-orb orb2"></div>
+<div id="toast"></div>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="screen active">
+  <div class="auth-box">
+    <div class="auth-logo">LearnFlow</div>
+    <div class="auth-tagline">Master skills. Build your future.</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Sign Up</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com" value="demo@learnflow.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" value="password123"/>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="handleLogin()">Sign In →</button>
+      <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted)">
+        Admin access? <span style="color:var(--accent);cursor:pointer;font-weight:600" onclick="handleAdminLogin()">Login as Admin</span>
+      </div>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" id="regFirst" placeholder="Aryan"/></div>
+        <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" id="regLast" placeholder="Sharma"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="regEmail" placeholder="you@example.com"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="regPass" placeholder="Create a strong password"/></div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="handleRegister()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD SCREEN -->
+<div id="dashScreen" class="screen">
+  <nav>
+    <div class="logo">LearnFlow</div>
+    <div class="nav-actions">
+      <span id="navUserName" class="text-sm text-muted"></span>
+      <div id="navAvatar" class="user-avatar">U</div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+  <div class="dash-layout">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Menu</div>
+        <button class="sidebar-item active" onclick="showPage('overview')"><span class="icon">🏠</span> Overview</button>
+        <button class="sidebar-item" onclick="showPage('courses')"><span class="icon">🎓</span> Courses</button>
+        <button class="sidebar-item" onclick="showPage('myCourses')"><span class="icon">📚</span> My Learning</button>
+        <button class="sidebar-item" onclick="showPage('profile')"><span class="icon">👤</span> Profile</button>
+      </div>
+      <div class="sidebar-section" id="adminSidebar" style="display:none">
+        <div class="sidebar-label">Admin</div>
+        <button class="sidebar-item" onclick="showPage('adminCourses')"><span class="icon">➕</span> Manage Courses</button>
+        <button class="sidebar-item" onclick="showPage('adminUsers')"><span class="icon">👥</span> Users</button>
+        <button class="sidebar-item" onclick="showPage('adminPayments')"><span class="icon">💳</span> Payments</button>
+      </div>
+    </div>
+    <div class="main-content">
+
+      <!-- OVERVIEW -->
+      <div id="page-overview" class="page active">
+        <div class="page-header">
+          <div class="page-title" id="welcomeTitle">Good morning! 👋</div>
+          <div class="page-sub">Here's your learning dashboard.</div>
+        </div>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="mb-24">
+          <div class="flex-between mb-16">
+            <div class="font-display bold" style="font-size:18px">Continue Learning</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('myCourses')">View all →</button>
+          </div>
+          <div id="continueGrid" class="courses-grid"></div>
+        </div>
+        <div>
+          <div class="flex-between mb-16">
+            <div class="font-display bold" style="font-size:18px">Recommended for You</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('courses')">Browse all →</button>
+          </div>
+          <div id="recommendGrid" class="courses-grid"></div>
+        </div>
+      </div>
+
+      <!-- ALL COURSES -->
+      <div id="page-courses" class="page">
+        <div class="page-header">
+          <div class="page-title">Explore Courses</div>
+          <div class="page-sub">Invest in yourself. Learn from the best.</div>
+        </div>
+        <div id="allCoursesGrid" class="courses-grid"></div>
+      </div>
+
+      <!-- MY COURSES -->
+      <div id="page-myCourses" class="page">
+        <div class="page-header">
+          <div class="page-title">My Learning</div>
+          <div class="page-sub">Track your progress and continue where you left off.</div>
+        </div>
+        <div id="myCoursesGrid" class="courses-grid"></div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="page-profile" class="page">
+        <div class="page-header"><div class="page-title">Profile</div><div class="page-sub">Your account details.</div></div>
+        <div id="profileContent"></div>
+      </div>
+
+      <!-- ADMIN: COURSES -->
+      <div id="page-adminCourses" class="page">
+        <div class="page-header flex-between">
+          <div><div class="page-title">Manage Courses</div><div class="page-sub">Create, edit, and upload video modules.</div></div>
+          <button class="btn btn-primary" onclick="openCreateCourseModal()">+ New Course</button>
+        </div>
+        <div id="adminCoursesTable"></div>
+      </div>
+
+      <!-- ADMIN: USERS -->
+      <div id="page-adminUsers" class="page">
+        <div class="page-header"><div class="page-title">Students</div><div class="page-sub">All registered users.</div></div>
+        <div class="card"><div class="table-wrap" id="usersTable"></div></div>
+      </div>
+
+      <!-- ADMIN: PAYMENTS -->
+      <div id="page-adminPayments" class="page">
+        <div class="page-header"><div class="page-title">Payments</div><div class="page-sub">All Razorpay transactions.</div></div>
+        <div class="card"><div class="table-wrap" id="paymentsTable"></div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PLAYER SCREEN -->
+<div id="playerScreen" class="screen">
+  <nav>
+    <div class="logo">LearnFlow</div>
+    <div class="nav-actions">
+      <button class="btn btn-outline btn-sm" onclick="showScreen('dashScreen')">← Dashboard</button>
+    </div>
+  </nav>
+  <div class="player-layout">
+    <div class="video-area">
+      <div class="video-wrapper" id="videoWrapper">
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="play-btn" onclick="playCurrentVideo()">▶</div>
+          <div style="font-size:15px;font-weight:500" id="currentVideoTitle">Select a module to start</div>
+          <div style="font-size:13px;color:var(--muted)" id="currentVideoDur"></div>
+        </div>
+        <video id="videoEl" style="display:none;width:100%;height:100%" controls onended="markModuleComplete()"></video>
+      </div>
+      <div class="mb-16">
+        <div class="font-display bold" style="font-size:20px;margin-bottom:4px" id="playerCourseTitle"></div>
+        <div class="text-muted text-sm" id="playerCourseMeta"></div>
+      </div>
+      <div class="card">
+        <div class="flex-between mb-16">
+          <div class="font-display bold">Progress</div>
+          <span id="progressPct" class="badge badge-purple">0%</span>
+        </div>
+        <div class="progress-bar" style="height:10px"><div class="progress-fill" id="playerProgressBar" style="width:0%"></div></div>
+        <div class="text-sm text-muted" style="margin-top:8px" id="progressDetails"></div>
+      </div>
+    </div>
+    <div class="modules-panel">
+      <div class="modules-title">📋 Course Modules</div>
+      <div id="modulesList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">Complete Purchase</div>
+    <div class="modal-sub">You're one step away from unlocking this course.</div>
+    <div class="price-display">
+      <div class="price-amount" id="payAmount">₹0</div>
+      <div class="price-course" id="payCourse"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="payName" placeholder="Your full name"/></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="payEmail" placeholder="your@email.com"/></div>
+    <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="payPhone" placeholder="+91 98765 43210" type="tel"/></div>
+    <button class="btn btn-success btn-full btn-lg" onclick="initiateRazorpay()" id="payBtn">🔒 Pay with Razorpay</button>
+    <div class="rzp-logo"><span>Secured by</span><span style="font-weight:700;color:#2d9cdb">Razorpay</span><span>🔐</span></div>
+    <div style="text-align:center;margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="closeModal('paymentModal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- CREATE COURSE MODAL -->
+<div class="modal-overlay" id="createCourseModal">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-title">Create New Course</div>
+    <div class="modal-sub">Fill in course details, upload modules, and set pricing.</div>
+    <div class="tabs">
+      <button class="tab active" id="ctab-details" onclick="switchCourseTab('details')">📝 Details</button>
+      <button class="tab" id="ctab-modules" onclick="switchCourseTab('modules')">🎬 Modules</button>
+      <button class="tab" id="ctab-pricing" onclick="switchCourseTab('pricing')">💰 Pricing</button>
+    </div>
+    <div id="courseTab-details">
+      <div class="form-group"><label class="form-label">Course Title *</label><input class="form-input" id="newTitle" placeholder="e.g. Complete React Developer Bootcamp"/></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="newDesc" placeholder="What will students learn in this course?"></textarea></div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="newCategory"><option>Web Development</option><option>Data Science</option><option>Design</option><option>Marketing</option><option>Business</option><option>Mobile Dev</option></select></div>
+        <div class="form-group"><label class="form-label">Level</label><select class="form-input" id="newLevel"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Course Emoji / Icon</label><input class="form-input" id="newEmoji" placeholder="🚀" maxlength="4" value="🎓"/></div>
+    </div>
+    <div id="courseTab-modules" style="display:none">
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('videoFileInput').click()">
+        <div class="upload-icon">🎬</div>
+        <div class="upload-text">Drop videos here or click to upload</div>
+        <div class="upload-sub">Supports MP4, MOV, AVI, MKV • Max 500MB per file</div>
+      </div>
+      <input type="file" id="videoFileInput" multiple accept="video/*" style="display:none" onchange="handleVideoUpload(event)"/>
+      <div style="margin-top:16px" id="uploadedModulesList"></div>
+    </div>
+    <div id="courseTab-pricing" style="display:none">
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Price (INR ₹) *</label><input class="form-input" id="newPrice" type="number" placeholder="1999" min="0"/></div>
+        <div class="form-group"><label class="form-label">Original Price (for discount)</label><input class="form-input" id="newOgPrice" type="number" placeholder="4999" min="0"/></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Razorpay Key ID</label>
+        <input class="form-input" id="rzpKey" placeholder="rzp_test_XXXXXXXXXXXXXXXXXX"/>
+        <div class="text-sm text-muted" style="margin-top:6px">Get your key from <a href="https://dashboard.razorpay.com" target="_blank" style="color:var(--accent)">Razorpay Dashboard</a>. Test keys start with <code style="color:var(--accent3)">rzp_test_</code></div>
+      </div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="newStatus"><option value="draft">Draft</option><option value="published">Published</option></select></div>
+    </div>
+    <div class="section-divider"></div>
+    <div class="flex gap-12">
+      <button class="btn btn-primary" onclick="saveCourse()" style="flex:1">✅ Save Course</button>
+      <button class="btn btn-outline" onclick="closeModal('createCourseModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODULES MODAL -->
+<div class="modal-overlay" id="editModulesModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-title">📦 Manage Modules</div>
+    <div class="modal-sub" id="editModulesCourseTitle"></div>
+    <div class="upload-zone" onclick="document.getElementById('editVideoInput').click()" style="padding:20px;margin-bottom:16px">
+      <div class="upload-text">+ Add More Video Modules</div>
+      <div class="upload-sub">MP4, MOV, AVI supported</div>
+    </div>
+    <input type="file" id="editVideoInput" multiple accept="video/*" style="display:none" onchange="handleEditVideoUpload(event)"/>
+    <div id="editModulesList"></div>
+    <div class="section-divider"></div>
+    <div class="flex gap-12">
+      <button class="btn btn-primary" onclick="saveModules()" style="flex:1">Save Changes</button>
+      <button class="btn btn-outline" onclick="closeModal('editModulesModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+var state = {
+  currentUser: null,
+  isAdmin: false,
+  courses: [],
+  users: [],
+  payments: [],
+  enrollments: {},
+  progress: {},
+  currentCourse: null,
+  currentModule: 0,
+  editingCourseId: null,
+  tempModules: [],
+  rzpKeyId: 'rzp_test_YOUR_KEY_HERE'
+};
+
+// ============ SEED DATA ============
+function initData() {
+  state.courses = [
+    { id:'c1', title:'Complete React Developer Bootcamp', desc:'Master React from scratch. Hooks, Context, Redux, and real-world projects.', category:'Web Development', level:'Intermediate', emoji:'⚛️', price:1999, ogPrice:4999, status:'published', modules:[{id:'m1',name:'Introduction to React',duration:'12:30',url:''},{id:'m2',name:'Components & Props',duration:'18:45',url:''},{id:'m3',name:'State & Hooks Deep Dive',duration:'24:10',url:''},{id:'m4',name:'Context API & useReducer',duration:'20:00',url:''},{id:'m5',name:'Building Real Projects',duration:'35:55',url:''}], students:1240 },
+    { id:'c2', title:'Python for Data Science', desc:'NumPy, Pandas, Matplotlib, Scikit-learn. Go from zero to ML engineer.', category:'Data Science', level:'Beginner', emoji:'🐍', price:2499, ogPrice:5999, status:'published', modules:[{id:'m1',name:'Python Basics Refresher',duration:'15:00',url:''},{id:'m2',name:'NumPy Essentials',duration:'22:30',url:''},{id:'m3',name:'Pandas DataFrames',duration:'28:00',url:''},{id:'m4',name:'Data Visualization',duration:'19:45',url:''}], students:892 },
+    { id:'c3', title:'UI/UX Design Masterclass', desc:'Learn Figma, design systems, and UX principles to create stunning products.', category:'Design', level:'Beginner', emoji:'🎨', price:1499, ogPrice:3999, status:'published', modules:[{id:'m1',name:'Design Thinking 101',duration:'10:00',url:''},{id:'m2',name:'Figma Fundamentals',duration:'25:30',url:''},{id:'m3',name:'Color Theory & Typography',duration:'18:00',url:''}], students:654 },
+    { id:'c4', title:'Node.js & Express Backend', desc:'Build scalable REST APIs with Node.js, Express, MongoDB and authentication.', category:'Web Development', level:'Intermediate', emoji:'🟢', price:1799, ogPrice:4499, status:'published', modules:[{id:'m1',name:'Node.js Architecture',duration:'14:00',url:''},{id:'m2',name:'Express Routing & Middleware',duration:'20:00',url:''},{id:'m3',name:'MongoDB & Mongoose',duration:'26:00',url:''},{id:'m4',name:'JWT Authentication',duration:'22:00',url:''},{id:'m5',name:'Deployment to Production',duration:'16:30',url:''}], students:720 }
+  ];
+  state.users = [
+    {id:'u1',name:'Aryan Sharma',email:'demo@learnflow.com',joined:'2024-01-15',role:'student'},
+    {id:'u2',name:'Priya Patel',email:'priya@example.com',joined:'2024-02-20',role:'student'},
+    {id:'u3',name:'Rohan Das',email:'rohan@example.com',joined:'2024-03-10',role:'student'}
+  ];
+  state.payments = [
+    {id:'pay_001',user:'Aryan Sharma',course:'Complete React Developer Bootcamp',amount:1999,status:'success',date:'2024-12-01',rzpId:'pay_QxR123ABC'},
+    {id:'pay_002',user:'Priya Patel',course:'Python for Data Science',amount:2499,status:'success',date:'2024-12-05',rzpId:'pay_QxR456DEF'},
+    {id:'pay_003',user:'Rohan Das',course:'UI/UX Design Masterclass',amount:1499,status:'success',date:'2024-12-08',rzpId:'pay_QxR789GHI'}
+  ];
+  state.enrollments = { u1:['c1','c3'], u2:['c2'], u3:['c3'] };
+  state.progress = { u1_c1:[true,true,false,false,false], u1_c3:[true,false,false] };
+}
+
+// ============ AUTH ============
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
+  document.getElementById('registerForm').style.display = tab==='register'?'block':'none';
+}
+
+function handleLogin() {
+  var email = document.getElementById('loginEmail').value;
+  var pass = document.getElementById('loginPass').value;
+  if (!email||!pass) return showToast('Please fill in all fields','error');
+  var user = state.users.find(function(u){return u.email===email;});
+  if (!user) return showToast('User not found. Try demo@learnflow.com','error');
+  state.currentUser = user; state.isAdmin = false;
+  initDashboard(); showToast('Welcome back, '+user.name.split(' ')[0]+'! 🎉','success');
+}
+
+function handleAdminLogin() {
+  state.currentUser = {id:'admin',name:'Admin User',email:'admin@learnflow.com',role:'admin'};
+  state.isAdmin = true; initDashboard(); showToast('Logged in as Admin 🔐','info');
+}
+
+function handleRegister() {
+  var first=document.getElementById('regFirst').value, last=document.getElementById('regLast').value;
+  var email=document.getElementById('regEmail').value, pass=document.getElementById('regPass').value;
+  if (!first||!last||!email||!pass) return showToast('Please fill in all fields','error');
+  var user = {id:'u'+Date.now(), name:first+' '+last, email:email, joined:new Date().toISOString().split('T')[0], role:'student'};
+  state.users.push(user); state.enrollments[user.id]=[];
+  state.currentUser=user; state.isAdmin=false;
+  initDashboard(); showToast('Welcome to LearnFlow, '+first+'! 🚀','success');
+}
+
+function logout() { state.currentUser=null; state.isAdmin=false; showScreen('authScreen'); showToast('Signed out','info'); }
+
+// ============ DASHBOARD ============
+function initDashboard() {
+  showScreen('dashScreen');
+  document.getElementById('navUserName').textContent = state.currentUser.name;
+  document.getElementById('navAvatar').textContent = state.currentUser.name.charAt(0).toUpperCase();
+  document.getElementById('adminSidebar').style.display = state.isAdmin?'block':'none';
+  var hr=new Date().getHours(), greet=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  document.getElementById('welcomeTitle').textContent = greet+', '+state.currentUser.name.split(' ')[0]+'! 👋';
+  renderStats(); renderContinueLearning(); renderRecommended(); renderAllCourses(); renderMyCourses(); renderProfile();
+  if (state.isAdmin) { renderAdminCourses(); renderAdminUsers(); renderAdminPayments(); }
+  showPage('overview');
+}
+
+function renderStats() {
+  var uid=state.currentUser.id, enrolled=(state.enrollments[uid]||[]).length;
+  var totalDone=0, totalMods=0;
+  (state.enrollments[uid]||[]).forEach(function(cid){
+    var c=state.courses.find(function(x){return x.id===cid;}), prog=state.progress[uid+'_'+cid]||[];
+    if(c){totalDone+=prog.filter(Boolean).length; totalMods+=c.modules.length;}
+  });
+  var html = state.isAdmin ?
+    '<div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-val">'+state.courses.length+'</div><div class="stat-label">Total Courses</div></div>'+
+    '<div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val">'+state.users.length+'</div><div class="stat-label">Students</div></div>'+
+    '<div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val">₹'+state.payments.reduce(function(a,p){return a+p.amount;},0).toLocaleString()+'</div><div class="stat-label">Total Revenue</div></div>'+
+    '<div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val">'+state.payments.length+'</div><div class="stat-label">Transactions</div></div>'
+    :
+    '<div class="stat-card"><div class="stat-icon">📚</div><div class="stat-val">'+enrolled+'</div><div class="stat-label">Enrolled Courses</div></div>'+
+    '<div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val">'+totalDone+'</div><div class="stat-label">Modules Done</div></div>'+
+    '<div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val">'+(totalMods>0?Math.round(totalDone/totalMods*100):0)+'%</div><div class="stat-label">Avg Progress</div></div>'+
+    '<div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-val">0</div><div class="stat-label">Certificates</div></div>';
+  document.getElementById('statsGrid').innerHTML = html;
+}
+
+function courseCardHtml(course, isEnrolled) {
+  var uid=state.currentUser?state.currentUser.id:'', prog=state.progress[uid+'_'+course.id]||[];
+  var pct=course.modules.length?Math.round(prog.filter(Boolean).length/course.modules.length*100):0;
+  var discount=course.ogPrice?Math.round((1-course.price/course.ogPrice)*100):0;
+  var thumbColors=[['#1a1a3e','#2d2d5e'],['#1e3a1e','#2d5e2d'],['#3a1a1e','#5e2d35'],['#1a2e3a','#2d4d5e'],['#2e1a3a','#4d2d5e']];
+  var ci=parseInt(course.id.replace(/\D/g,''))%thumbColors.length, cl=thumbColors[ci];
+  return '<div class="course-card" onclick="handleCourseClick(\''+course.id+'\')">'
+    +'<div class="course-thumb" style="background:linear-gradient(135deg,'+cl[0]+','+cl[1]+')">'
+    +'<span>'+course.emoji+'</span>'
+    +(discount>0?'<span class="badge badge-red" style="position:absolute;top:12px;right:12px">'+discount+'% OFF</span>':'')
+    +'</div>'
+    +'<div class="course-body">'
+    +'<div class="flex gap-8 mb-8"><span class="badge badge-purple">'+course.category+'</span><span class="badge badge-gold">'+course.level+'</span></div>'
+    +'<div class="course-title">'+course.title+'</div>'
+    +'<div class="course-desc">'+course.desc+'</div>'
+    +'<div class="course-meta"><span>🎬 '+course.modules.length+' modules</span><span>👥 '+(course.students||0).toLocaleString()+' students</span></div>'
+    +(isEnrolled
+      ? '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px"><span>Progress</span><span>'+pct+'%</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div></div><button class="btn btn-primary btn-sm btn-full">▶ Continue Learning</button>'
+      : '<div class="flex-between" style="align-items:flex-end"><div><div class="course-price">₹'+course.price.toLocaleString()+'</div>'+(course.ogPrice?'<div class="text-sm text-muted" style="text-decoration:line-through">₹'+course.ogPrice.toLocaleString()+'</div>':'')+'</div><button class="btn btn-primary btn-sm">Enroll Now</button></div>'
+    )
+    +'</div></div>';
+}
+
+function handleCourseClick(courseId) {
+  var uid=state.currentUser.id, enrolled=(state.enrollments[uid]||[]).includes(courseId);
+  var course=state.courses.find(function(c){return c.id===courseId;});
+  if (enrolled) openPlayer(courseId); else openPaymentModal(course);
+}
+
+function renderContinueLearning() {
+  var uid=state.currentUser.id, enrolled=state.enrollments[uid]||[];
+  document.getElementById('continueGrid').innerHTML = enrolled.length===0
+    ? '<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-text">No courses yet</div><div class="empty-sub">Browse and enroll to get started</div></div>'
+    : enrolled.slice(0,2).map(function(cid){var c=state.courses.find(function(x){return x.id===cid;}); return c?courseCardHtml(c,true):'';}).join('');
+}
+
+function renderRecommended() {
+  var uid=state.currentUser.id, enrolled=state.enrollments[uid]||[];
+  var notEnrolled=state.courses.filter(function(c){return !enrolled.includes(c.id)&&c.status==='published';}).slice(0,3);
+  document.getElementById('recommendGrid').innerHTML = notEnrolled.map(function(c){return courseCardHtml(c,false);}).join('');
+}
+
+function renderAllCourses() {
+  var uid=state.currentUser?state.currentUser.id:'', enrolled=state.enrollments[uid]||[];
+  var html=state.courses.filter(function(c){return c.status==='published';}).map(function(c){return courseCardHtml(c,enrolled.includes(c.id));}).join('');
+  document.getElementById('allCoursesGrid').innerHTML=html||'<div class="empty-state"><div class="empty-icon">🎓</div><div class="empty-text">No courses published yet</div></div>';
+}
+
+function renderMyCourses() {
+  var uid=state.currentUser.id, enrolled=state.enrollments[uid]||[];
+  document.getElementById('myCoursesGrid').innerHTML = enrolled.length===0
+    ? '<div class="empty-state"><div class="empty-icon">🎓</div><div class="empty-text">No courses enrolled yet</div><div class="empty-sub">Browse our catalog to get started</div><button class="btn btn-primary" style="margin-top:16px" onclick="showPage(\'courses\')">Browse Courses</button></div>'
+    : enrolled.map(function(cid){var c=state.courses.find(function(x){return x.id===cid;}); return c?courseCardHtml(c,true):'';}).join('');
+}
+
+function renderProfile() {
+  var u=state.currentUser, enrolled=(state.enrollments[u.id]||[]).length;
+  document.getElementById('profileContent').innerHTML='<div class="profile-header"><div class="profile-avatar">'+u.name.charAt(0)+'</div><div><div style="font-family:var(--font-display);font-size:22px;font-weight:700">'+u.name+'</div><div style="color:var(--muted);font-size:14px;margin-top:2px">'+u.email+'</div><div style="margin-top:8px"><span class="badge badge-purple">'+(u.role||'Student')+'</span></div></div></div><div class="grid-2"><div class="card"><div class="text-muted text-sm mb-4">Enrolled Courses</div><div class="font-display bold" style="font-size:32px">'+enrolled+'</div></div><div class="card"><div class="text-muted text-sm mb-4">Member Since</div><div class="font-display bold" style="font-size:20px">'+(u.joined||'Today')+'</div></div></div>';
+}
+
+// ============ ADMIN ============
+function renderAdminCourses() {
+  document.getElementById('adminCoursesTable').innerHTML='<div class="card"><div class="table-wrap"><table><thead><tr><th>Course</th><th>Category</th><th>Price</th><th>Modules</th><th>Students</th><th>Status</th><th>Actions</th></tr></thead><tbody>'
+    +state.courses.map(function(c){
+      return '<tr><td><div style="display:flex;align-items:center;gap:10px"><span style="font-size:24px">'+c.emoji+'</span><div><div style="font-weight:600;font-size:14px">'+c.title+'</div><div class="text-muted text-sm">'+c.level+'</div></div></div></td>'
+        +'<td><span class="badge badge-purple">'+c.category+'</span></td>'
+        +'<td class="text-green font-display bold">₹'+c.price.toLocaleString()+'</td>'
+        +'<td>'+c.modules.length+'</td>'
+        +'<td>'+(c.students||0).toLocaleString()+'</td>'
+        +'<td><span class="badge '+(c.status==='published'?'badge-green':'badge-gold')+'">'+c.status+'</span></td>'
+        +'<td><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm" onclick="openEditModules(\''+c.id+'\')">📦 Modules</button><button class="btn btn-danger btn-sm" onclick="deleteCourse(\''+c.id+'\')">🗑</button></div></td></tr>';
+    }).join('')
+    +'</tbody></table></div></div>';
+}
+
+function renderAdminUsers() {
+  document.getElementById('usersTable').innerHTML='<table><thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Enrollments</th><th>Role</th></tr></thead><tbody>'
+    +state.users.map(function(u){return '<tr><td><div style="display:flex;align-items:center;gap:10px"><div class="user-avatar" style="width:32px;height:32px;font-size:13px">'+u.name.charAt(0)+'</div><span>'+u.name+'</span></div></td><td class="text-muted">'+u.email+'</td><td class="text-muted">'+u.joined+'</td><td><span class="badge badge-purple">'+((state.enrollments[u.id]||[]).length)+'</span></td><td><span class="badge '+(u.role==='admin'?'badge-red':'badge-green')+'">'+(u.role||'student')+'</span></td></tr>';}).join('')
+    +'</tbody></table>';
+}
+
+function renderAdminPayments() {
+  document.getElementById('paymentsTable').innerHTML='<table><thead><tr><th>Txn ID</th><th>Student</th><th>Course</th><th>Amount</th><th>Razorpay ID</th><th>Date</th><th>Status</th></tr></thead><tbody>'
+    +state.payments.map(function(p){return '<tr><td class="text-muted text-sm">'+p.id+'</td><td>'+p.user+'</td><td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.course+'</td><td class="text-green font-display bold">₹'+p.amount.toLocaleString()+'</td><td class="text-muted text-sm">'+p.rzpId+'</td><td class="text-muted">'+p.date+'</td><td><span class="badge badge-green">'+p.status+'</span></td></tr>';}).join('')
+    +'</tbody></table>';
+}
+
+// ============ PAYMENT ============
+var currentPayCourse = null;
+
+function openPaymentModal(course) {
+  currentPayCourse=course;
+  document.getElementById('payAmount').textContent='₹'+course.price.toLocaleString();
+  document.getElementById('payCourse').textContent=course.title;
+  document.getElementById('payName').value=state.currentUser.name;
+  document.getElementById('payEmail').value=state.currentUser.email;
+  document.getElementById('payPhone').value='';
+  openModal('paymentModal');
+}
+
+function initiateRazorpay() {
+  var name=document.getElementById('payName').value, email=document.getElementById('payEmail').value, phone=document.getElementById('payPhone').value;
+  if (!name||!email||!phone) return showToast('Please fill in all payment details','error');
+  var btn=document.getElementById('payBtn');
+  btn.textContent='⏳ Opening Razorpay...'; btn.disabled=true;
+  var rzpKey=state.rzpKeyId||'rzp_test_YOUR_KEY_HERE';
+  var options={
+    key:rzpKey, amount:currentPayCourse.price*100, currency:'INR',
+    name:'LearnFlow', description:currentPayCourse.title,
+    handler:function(response){onPaymentSuccess(response);},
+    prefill:{name:name, email:email, contact:phone},
+    notes:{courseId:currentPayCourse.id},
+    theme:{color:'#6c63ff'},
+    modal:{ondismiss:function(){btn.textContent='🔒 Pay with Razorpay'; btn.disabled=false; showToast('Payment cancelled','info');}}
+  };
+  try {
+    var rzp=new Razorpay(options);
+    rzp.on('payment.failed',function(res){showToast('Payment failed: '+res.error.description,'error'); btn.textContent='🔒 Pay with Razorpay'; btn.disabled=false;});
+    rzp.open();
+  } catch(e) {
+    // Demo fallback — fires when Razorpay key is not yet configured
+    showToast('Demo mode: simulating payment success 🧪','info');
+    setTimeout(function(){simulatePaymentSuccess(); btn.textContent='🔒 Pay with Razorpay'; btn.disabled=false;}, 1200);
+  }
+}
+
+function simulatePaymentSuccess() { onPaymentSuccess({razorpay_payment_id:'pay_DEMO_'+Date.now()}); }
+
+function onPaymentSuccess(response) {
+  var uid=state.currentUser.id;
+  if (!state.enrollments[uid]) state.enrollments[uid]=[];
+  if (!state.enrollments[uid].includes(currentPayCourse.id)) state.enrollments[uid].push(currentPayCourse.id);
+  state.progress[uid+'_'+currentPayCourse.id]=new Array(currentPayCourse.modules.length).fill(false);
+  state.payments.push({id:'pay_'+Date.now(), user:state.currentUser.name, course:currentPayCourse.title, amount:currentPayCourse.price, status:'success', date:new Date().toISOString().split('T')[0], rzpId:response.razorpay_payment_id||'pay_DEMO'});
+  closeModal('paymentModal');
+  showToast('🎉 Enrolled in "'+currentPayCourse.title+'"!','success');
+  renderContinueLearning(); renderRecommended(); renderAllCourses(); renderMyCourses(); renderStats();
+  if (state.isAdmin){renderAdminPayments(); renderAdminUsers();}
+  setTimeout(function(){openPlayer(currentPayCourse.id);},600);
+}
+
+// ============ PLAYER ============
+function openPlayer(courseId) {
+  var course=state.courses.find(function(c){return c.id===courseId;});
+  if (!course) return;
+  state.currentCourse=course; state.currentModule=0;
+  document.getElementById('playerCourseTitle').textContent=course.title;
+  document.getElementById('playerCourseMeta').textContent=course.modules.length+' modules • '+course.category;
+  renderModulesList(); updatePlayerProgress(); loadModule(0); showScreen('playerScreen');
+}
+
+function renderModulesList() {
+  var uid=state.currentUser.id, prog=state.progress[uid+'_'+state.currentCourse.id]||[];
+  document.getElementById('modulesList').innerHTML=state.currentCourse.modules.map(function(m,i){
+    return '<div class="module-item '+(i===state.currentModule?'active ':'')+( prog[i]?'completed':'')+'" onclick="loadModule('+i+')">'
+      +'<div class="module-num">'+(prog[i]?'✓':i+1)+'</div>'
+      +'<div style="flex:1"><div class="module-name">'+m.name+'</div><div class="module-dur">⏱ '+m.duration+'</div></div>'
+      +(i===state.currentModule?'<span style="color:var(--accent);font-size:11px;font-weight:600">▶ NOW</span>':'')
+      +'</div>';
+  }).join('');
+}
+
+function loadModule(idx) {
+  var mod=state.currentCourse.modules[idx];
+  state.currentModule=idx;
+  var videoEl=document.getElementById('videoEl'), placeholder=document.getElementById('videoPlaceholder');
+  document.getElementById('currentVideoTitle').textContent=mod.name;
+  document.getElementById('currentVideoDur').textContent='Duration: '+mod.duration;
+  if (mod.url&&mod.url.startsWith('blob:')) {
+    placeholder.style.display='none'; videoEl.style.display='block'; videoEl.src=mod.url; videoEl.play();
+  } else { videoEl.style.display='none'; placeholder.style.display='flex'; }
+  renderModulesList();
+}
+
+function playCurrentVideo() {
+  var mod=state.currentCourse.modules[state.currentModule];
+  if (!mod.url) { showToast('No video uploaded for this module yet','info'); setTimeout(markModuleComplete,800); return; }
+}
+
+function markModuleComplete() {
+  var uid=state.currentUser.id, key=uid+'_'+state.currentCourse.id;
+  if (!state.progress[key]) state.progress[key]=new Array(state.currentCourse.modules.length).fill(false);
+  state.progress[key][state.currentModule]=true;
+  updatePlayerProgress(); renderModulesList();
+  showToast('Module completed! ✅','success');
+  if (state.currentModule<state.currentCourse.modules.length-1) setTimeout(function(){loadModule(state.currentModule+1);},800);
+}
+
+function updatePlayerProgress() {
+  var uid=state.currentUser.id, key=uid+'_'+state.currentCourse.id, prog=state.progress[key]||[];
+  var done=prog.filter(Boolean).length, total=state.currentCourse.modules.length, pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('playerProgressBar').style.width=pct+'%';
+  document.getElementById('progressDetails').textContent=done+' of '+total+' modules completed';
+}
+
+// ============ ADMIN: CREATE COURSE ============
+function openCreateCourseModal() {
+  state.tempModules=[];
+  ['newTitle','newDesc','newPrice','newOgPrice'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('newEmoji').value='🎓';
+  document.getElementById('uploadedModulesList').innerHTML='';
+  document.getElementById('rzpKey').value=state.rzpKeyId!=='rzp_test_YOUR_KEY_HERE'?state.rzpKeyId:'';
+  switchCourseTab('details'); openModal('createCourseModal');
+}
+
+function switchCourseTab(tab) {
+  ['details','modules','pricing'].forEach(function(t){
+    document.getElementById('courseTab-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('ctab-'+t).classList.toggle('active',t===tab);
+  });
+}
+
+function handleVideoUpload(event) {
+  var files=Array.from(event.target.files);
+  files.forEach(function(file){
+    state.tempModules.push({id:'m_'+Date.now()+Math.random(), name:file.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' '), duration:'--:--', url:URL.createObjectURL(file), size:formatSize(file.size), file:file});
+  });
+  renderTempModules(); showToast(files.length+' video(s) added','success');
+}
+
+function renderTempModules() {
+  document.getElementById('uploadedModulesList').innerHTML=state.tempModules.map(function(m,i){
+    return '<div class="module-list-item"><span class="drag-handle">⋮⋮</span><div class="mod-info"><input class="form-input" value="'+m.name+'" onchange="state.tempModules['+i+'].name=this.value" style="padding:6px 10px;font-size:13px;margin-bottom:4px"/><div class="text-sm text-muted">📹 '+m.size+'</div></div><button class="btn btn-ghost btn-sm" onclick="removeTempModule('+i+')">✕</button></div>';
+  }).join('');
+}
+
+function removeTempModule(idx) { state.tempModules.splice(idx,1); renderTempModules(); }
+
+function saveCourse() {
+  var title=document.getElementById('newTitle').value;
+  if (!title) return showToast('Please add a course title','error');
+  var rzpKey=document.getElementById('rzpKey').value;
+  if (rzpKey) state.rzpKeyId=rzpKey;
+  var course={id:'c_'+Date.now(), title:title, desc:document.getElementById('newDesc').value||'No description.', category:document.getElementById('newCategory').value, level:document.getElementById('newLevel').value, emoji:document.getElementById('newEmoji').value||'🎓', price:parseInt(document.getElementById('newPrice').value)||0, ogPrice:parseInt(document.getElementById('newOgPrice').value)||0, status:document.getElementById('newStatus').value, modules:state.tempModules.map(function(m,i){return Object.assign({},m,{id:'m'+(i+1)});}), students:0};
+  state.courses.push(course); closeModal('createCourseModal');
+  renderAdminCourses(); renderAllCourses();
+  showToast('Course "'+title+'" created! 🎓','success');
+}
+
+// ============ ADMIN: EDIT MODULES ============
+function openEditModules(courseId) {
+  state.editingCourseId=courseId;
+  var course=state.courses.find(function(c){return c.id===courseId;});
+  state.tempModules=course.modules.map(function(m){return Object.assign({},m);});
+  document.getElementById('editModulesCourseTitle').textContent=course.title;
+  renderEditModules(); openModal('editModulesModal');
+}
+
+function renderEditModules() {
+  document.getElementById('editModulesList').innerHTML=state.tempModules.map(function(m,i){
+    return '<div class="module-list-item"><span class="drag-handle">⋮⋮</span><div class="mod-info"><input class="form-input" value="'+m.name+'" onchange="state.tempModules['+i+'].name=this.value" style="padding:6px 10px;font-size:13px;margin-bottom:4px"/><div class="text-sm text-muted">'+(m.url&&m.url.startsWith('blob:')?'✅ Video uploaded':'⚠️ No video')+(m.size?' • '+m.size:'')+'</div></div><button class="btn btn-ghost btn-sm" onclick="state.tempModules.splice('+i+',1);renderEditModules()">✕</button></div>';
+  }).join('');
+}
+
+function handleEditVideoUpload(event) {
+  Array.from(event.target.files).forEach(function(file){
+    state.tempModules.push({id:'m_'+Date.now()+Math.random(), name:file.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' '), duration:'--:--', url:URL.createObjectURL(file), size:formatSize(file.size), file:file});
+  });
+  renderEditModules(); showToast('Videos added','success');
+}
+
+function saveModules() {
+  var course=state.courses.find(function(c){return c.id===state.editingCourseId;});
+  if (course){course.modules=state.tempModules; closeModal('editModulesModal'); renderAdminCourses(); showToast('Modules saved! ✅','success');}
+}
+
+function deleteCourse(courseId) {
+  if (!confirm('Delete this course? This cannot be undone.')) return;
+  state.courses=state.courses.filter(function(c){return c.id!==courseId;});
+  renderAdminCourses(); renderAllCourses(); showToast('Course deleted','info');
+}
+
+// ============ HELPERS ============
+function formatSize(b){if(b>1e9)return (b/1e9).toFixed(1)+' GB';if(b>1e6)return (b/1e6).toFixed(1)+' MB';return (b/1e3).toFixed(0)+' KB';}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
+  var el=document.getElementById('page-'+pageId); if(el) el.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(function(btn){if(btn.getAttribute('onclick')&&btn.getAttribute('onclick').includes(pageId)) btn.classList.add('active');});
+}
+
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(screenId).classList.add('active');
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+document.querySelectorAll('.modal-overlay').forEach(function(o){
+  o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open');});
+});
+
+function showToast(msg, type) {
+  var t=document.getElementById('toast'); t.textContent=msg; t.className='show '+(type||'info');
+  clearTimeout(t._t); t._t=setTimeout(function(){t.className='';},3500);
+}
+
+// ============ DRAG DROP UPLOAD ============
+window.addEventListener('load', function(){
+  var zone=document.getElementById('uploadZone');
+  if (!zone) return;
+  zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('dragover');});
+  zone.addEventListener('dragleave',function(){zone.classList.remove('dragover');});
+  zone.addEventListener('drop',function(e){
+    e.preventDefault();zone.classList.remove('dragover');
+    var files=Array.from(e.dataTransfer.files).filter(function(f){return f.type.startsWith('video/');});
+    if (files.length){var dt=new DataTransfer(); files.forEach(function(f){dt.items.add(f);}); var inp=document.getElementById('videoFileInput'); inp.files=dt.files; handleVideoUpload({target:inp});}
+  });
+});
+
+// INIT
+initData();
+</script>
+</body>
+</html>
