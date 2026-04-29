@@ -3,685 +3,852 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Delish_us — Fine Dining Menu</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Delish_us — World Cuisine Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ivory:    #FDF6E9;
+  --ivory2:   #FAF0D7;
+  --ivory3:   #F5E6C0;
+  --gold:     #C8962A;
+  --gold2:    #E8B84B;
+  --gold3:    #F5D080;
+  --gold-glow:#FFE08A;
+  --crimson:  #9B1D20;
+  --crimson2: #C42428;
+  --teal:     #1A6B5A;
+  --teal2:    #2E9B80;
+  --navy:     #1A2F5E;
+  --navy2:    #2A4080;
+  --text:     #2A1A0E;
+  --text2:    #5A3E28;
+  --text3:    #9A7A5A;
+  --white:    #FFFFFF;
+}
 
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8CB7A;
-    --gold-dark: #8B6914;
-    --cream: #F5EDD8;
-    --bg: #0C0B09;
-    --bg2: #131210;
-    --bg3: #1A1815;
-    --text: #EDE6D6;
-    --text-muted: #9A8E78;
-    --border: rgba(201,168,76,0.2);
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  html { scroll-behavior: smooth; }
+body {
+  font-family: 'Raleway', sans-serif;
+  background: var(--ivory);
+  color: var(--text);
+  overflow-x: hidden;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+.hero {
+  position: relative;
+  background: linear-gradient(160deg, #1A0A02 0%, #2E1205 40%, #1A0805 70%, #0E0401 100%);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 70px 24px 60px;
+}
 
-  /* ── NOISE TEXTURE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.6;
-  }
+/* radial gold halo */
+.hero::before {
+  content:'';
+  position:absolute;
+  top:-60px; left:50%;
+  transform:translateX(-50%);
+  width:800px; height:500px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(232,184,75,0.18) 0%, rgba(200,150,42,0.07) 40%, transparent 70%);
+  pointer-events:none;
+}
 
-  /* ── HERO ── */
-  .hero {
-    position: relative;
-    text-align: center;
-    padding: 90px 24px 60px;
-    overflow: hidden;
-  }
+/* decorative corner ornaments via SVG */
+.hero-corner {
+  position: absolute;
+  width: 120px; height: 120px;
+  opacity: 0.35;
+}
+.hero-corner.tl { top: 16px; left: 16px; }
+.hero-corner.tr { top: 16px; right: 16px; transform: scaleX(-1); }
+.hero-corner.bl { bottom: 16px; left: 16px; transform: scaleY(-1); }
+.hero-corner.br { bottom: 16px; right: 16px; transform: scale(-1,-1); }
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -120px; left: 50%;
-    transform: translateX(-50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
+.hero-tag {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  margin-bottom: 22px;
+  opacity: 0;
+  animation: riseUp 0.8s 0.1s ease forwards;
+}
 
-  .brand-ornament {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    margin-bottom: 20px;
-    animation: fadeDown 1s ease both;
-  }
+.hero-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: riseUp 0.8s 0.2s ease forwards;
+}
+.hero-divider .hline {
+  width: 90px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold2));
+}
+.hero-divider .hline.r {
+  background: linear-gradient(90deg, var(--gold2), transparent);
+}
+.hero-divider .hdot {
+  width: 7px; height: 7px;
+  border: 1.5px solid var(--gold2);
+  transform: rotate(45deg);
+}
+.hero-divider .hdot.sm {
+  width: 4px; height: 4px;
+}
 
-  .ornament-line {
-    flex: 1;
-    max-width: 120px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
+.hero-title {
+  font-family: 'Playfair Display SC', serif;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-weight: 700;
+  color: var(--gold3);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-align: center;
+  opacity: 0;
+  animation: riseUp 0.9s 0.3s ease forwards;
+  text-shadow: 0 0 60px rgba(245,208,128,0.25), 0 2px 0 rgba(0,0,0,0.4);
+}
 
-  .diamond {
-    width: 8px; height: 8px;
-    background: var(--gold);
-    transform: rotate(45deg);
-    flex-shrink: 0;
-  }
+.hero-sub {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--ivory3);
+  margin-top: 14px;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  animation: riseUp 0.9s 0.45s ease forwards;
+}
 
-  .brand-name {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2.8rem, 7vw, 5rem);
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    color: var(--cream);
-    line-height: 1;
-    animation: fadeDown 1s 0.15s ease both;
-    opacity: 0;
-  }
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 32px;
+  opacity: 0;
+  animation: riseUp 0.9s 0.6s ease forwards;
+}
+.hero-pill {
+  padding: 6px 18px;
+  border: 1px solid rgba(232,184,75,0.4);
+  background: rgba(232,184,75,0.07);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  border-radius: 2px;
+}
 
-  .brand-tagline {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1.15rem;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-    margin-top: 10px;
-    animation: fadeDown 1s 0.3s ease both;
-    opacity: 0;
-  }
+/* floating sparkle particles */
+.sparkle {
+  position: absolute;
+  pointer-events: none;
+  animation: floatSpark linear infinite;
+  opacity: 0;
+}
+.sparkle::before {
+  content: '✦';
+  color: var(--gold2);
+  font-size: 0.7rem;
+}
 
-  .subtitle-bar {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 28px;
-    padding: 8px 24px;
-    border: 1px solid var(--border);
-    background: rgba(201,168,76,0.04);
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    animation: fadeDown 1s 0.45s ease both;
-    opacity: 0;
-  }
+/* ════════════════════════════════
+   NAV
+════════════════════════════════ */
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--white);
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 4px 24px rgba(200,150,42,0.12);
+}
 
-  /* ── NAVIGATION ── */
-  .nav-wrapper {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(12,11,9,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 clamp(16px, 5vw, 80px);
-  }
+.nav {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 16px;
+}
+.nav::-webkit-scrollbar { display: none; }
 
-  .nav {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+.nav-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0 22px;
+  height: 56px;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text3);
+  position: relative;
+  transition: color 0.25s;
+  white-space: nowrap;
+}
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%; right: 50%;
+  height: 3px;
+  background: var(--gold);
+  transition: left 0.3s, right 0.3s;
+  margin-bottom: -3px;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--gold); }
+.nav-btn.active::after { left: 16px; right: 16px; }
 
-  .nav::-webkit-scrollbar { display: none; }
+.nav-icon { margin-right: 6px; font-size: 0.9rem; }
 
-  .nav-btn {
-    background: none;
-    border: none;
-    padding: 18px 24px;
-    cursor: pointer;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    white-space: nowrap;
-    position: relative;
-    transition: color 0.3s;
-  }
+.nbadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px; height: 17px;
+  background: var(--gold3);
+  color: var(--text);
+  font-size: 0.55rem;
+  font-weight: 700;
+  border-radius: 50%;
+  margin-left: 6px;
+}
 
-  .nav-btn::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 50%; right: 50%;
-    height: 1.5px;
-    background: var(--gold);
-    transition: left 0.3s, right 0.3s;
-  }
+/* ════════════════════════════════
+   SECTION BAND
+════════════════════════════════ */
+#menu-main { max-width: 1140px; margin: 0 auto; padding: 0 clamp(12px,4vw,60px) 100px; }
 
-  .nav-btn:hover { color: var(--cream); }
-  .nav-btn.active { color: var(--gold); }
-  .nav-btn.active::after { left: 20%; right: 20%; }
+.menu-section { display: none; }
+.menu-section.active { display: block; animation: fadeSlide 0.55s ease both; }
 
-  /* ── MENU CONTENT ── */
-  .menu-sections {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 clamp(16px, 5vw, 80px) 100px;
-  }
+.sec-header {
+  text-align: center;
+  padding: 64px 0 44px;
+}
 
-  .menu-section {
-    display: none;
-    animation: sectionIn 0.5s ease both;
-  }
-  .menu-section.active { display: block; }
+.sec-kicker {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
 
-  /* ── SECTION HEADER ── */
-  .section-header {
-    text-align: center;
-    padding: 72px 0 52px;
-    position: relative;
-  }
+.sec-title {
+  font-family: 'Playfair Display SC', serif;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
 
-  .section-emoji {
-    font-size: 2.8rem;
-    display: block;
-    margin-bottom: 16px;
-    filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
-  }
+.sec-italic {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text3);
+  margin-bottom: 22px;
+}
 
-  .section-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    color: var(--cream);
-    margin-bottom: 8px;
-  }
+.sec-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.sec-rule .rline {
+  width: 72px; height: 1px;
+}
+.sec-rule .rdot {
+  width: 6px; height: 6px;
+  transform: rotate(45deg);
+}
 
-  .section-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    margin-bottom: 24px;
-  }
+/* ════════════════════════════════
+   DISH GRID
+════════════════════════════════ */
+.dish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
 
-  .section-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-  }
+.dish-card {
+  background: var(--white);
+  border-radius: 4px;
+  padding: 28px 24px 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-top: 3px solid transparent;
+}
+.dish-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+}
 
-  .section-divider span {
-    width: 60px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold));
-  }
+/* shimmer line on hover */
+.dish-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  transition: left 0.55s;
+  pointer-events: none;
+}
+.dish-card:hover::after { left: 150%; }
 
-  .section-divider span:last-child {
-    background: linear-gradient(90deg, var(--gold), transparent);
-  }
+.dish-emoji {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 14px;
+  transition: transform 0.3s;
+  line-height: 1;
+}
+.dish-card:hover .dish-emoji { transform: scale(1.2) rotate(-4deg); }
 
-  .section-divider .gem {
-    width: 5px; height: 5px;
-    background: var(--gold);
-    transform: rotate(45deg);
-  }
+.dish-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+}
 
-  /* ── DISH GRID ── */
-  .dish-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
+.dish-desc {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin-top: 6px;
+  text-transform: uppercase;
+}
 
-  .dish-card {
-    background: var(--bg2);
-    padding: 32px 28px;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-    transition: background 0.35s;
-  }
+.dish-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 2px;
+  margin-top: 10px;
+}
 
-  .dish-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
-    transform: scaleX(0);
-    transition: transform 0.4s;
-  }
+/* FEATURED wide card */
+.dish-card.wide {
+  grid-column: span 2;
+}
+@media (max-width: 660px) { .dish-card.wide { grid-column: span 1; } }
 
-  .dish-card:hover { background: var(--bg3); }
-  .dish-card:hover::before { transform: scaleX(1); }
+/* ════════════════════════════════
+   CUISINE COLOUR THEMES
+════════════════════════════════ */
 
-  .dish-emoji {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 14px;
-    transition: transform 0.3s;
-  }
-  .dish-card:hover .dish-emoji { transform: scale(1.15); }
+/* Chinese — crimson + gold */
+#sec-chinese .sec-kicker { color: var(--crimson); }
+#sec-chinese .sec-title  { color: var(--crimson); }
+#sec-chinese .rline      { background: linear-gradient(90deg, transparent, var(--crimson)); }
+#sec-chinese .rline.r    { background: linear-gradient(90deg, var(--crimson), transparent); }
+#sec-chinese .rdot       { background: var(--crimson); }
+#sec-chinese .dish-card  { border-top-color: var(--crimson2); }
+#sec-chinese .dish-desc  { color: var(--crimson); }
+#sec-chinese .dish-tag   { background: #FFF0F0; color: var(--crimson); border: 1px solid rgba(155,29,32,0.2); }
+#sec-chinese .dish-card.wide { background: linear-gradient(120deg, #FFF8F8 0%, #FFF0F0 100%); }
+#sec-chinese .sec-header { background: linear-gradient(180deg, #FFF5F5 0%, transparent 100%); border-radius: 8px; }
 
-  .dish-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: var(--cream);
-    letter-spacing: 0.04em;
-    line-height: 1.3;
-  }
+/* South Indian — teal + saffron */
+#sec-south .sec-kicker  { color: var(--teal); }
+#sec-south .sec-title   { color: var(--teal); }
+#sec-south .rline       { background: linear-gradient(90deg, transparent, var(--teal)); }
+#sec-south .rline.r     { background: linear-gradient(90deg, var(--teal), transparent); }
+#sec-south .rdot        { background: var(--teal); }
+#sec-south .dish-card   { border-top-color: var(--teal2); }
+#sec-south .dish-desc   { color: var(--teal); }
+#sec-south .dish-tag    { background: #F0FAF6; color: var(--teal); border: 1px solid rgba(26,107,90,0.2); }
+#sec-south .dish-card.wide { background: linear-gradient(120deg, #F5FFFB 0%, #EDFAF5 100%); }
+#sec-south .sec-header  { background: linear-gradient(180deg, #F0FAF6 0%, transparent 100%); border-radius: 8px; }
 
-  .dish-sub {
-    font-size: 0.72rem;
-    color: var(--gold);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 6px;
-    display: block;
-  }
+/* North Indian — gold + amber */
+#sec-north .sec-kicker  { color: var(--gold); }
+#sec-north .sec-title   { color: #7A5010; }
+#sec-north .rline       { background: linear-gradient(90deg, transparent, var(--gold)); }
+#sec-north .rline.r     { background: linear-gradient(90deg, var(--gold), transparent); }
+#sec-north .rdot        { background: var(--gold); }
+#sec-north .dish-card   { border-top-color: var(--gold2); }
+#sec-north .dish-desc   { color: var(--gold); }
+#sec-north .dish-tag    { background: #FFFBF0; color: #8A6010; border: 1px solid rgba(200,150,42,0.3); }
+#sec-north .dish-card.wide { background: linear-gradient(120deg, #FFFDF5 0%, #FFF8E0 100%); }
+#sec-north .sec-header  { background: linear-gradient(180deg, #FFFBEF 0%, transparent 100%); border-radius: 8px; }
 
-  .dish-corner {
-    position: absolute;
-    bottom: 16px; right: 20px;
-    width: 20px; height: 20px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .dish-card:hover .dish-corner { opacity: 1; }
+/* Italian — navy + gold */
+#sec-italian .sec-kicker { color: var(--navy); }
+#sec-italian .sec-title  { color: var(--navy); }
+#sec-italian .rline      { background: linear-gradient(90deg, transparent, var(--navy)); }
+#sec-italian .rline.r    { background: linear-gradient(90deg, var(--navy), transparent); }
+#sec-italian .rdot       { background: var(--navy); }
+#sec-italian .dish-card  { border-top-color: var(--navy2); }
+#sec-italian .dish-desc  { color: var(--navy); }
+#sec-italian .dish-tag   { background: #F0F3FF; color: var(--navy); border: 1px solid rgba(26,47,94,0.2); }
+#sec-italian .dish-card.wide { background: linear-gradient(120deg, #F5F7FF 0%, #EEF1FF 100%); }
+#sec-italian .sec-header { background: linear-gradient(180deg, #F0F4FF 0%, transparent 100%); border-radius: 8px; }
 
-  /* ── FEATURED ITEM ── */
-  .dish-card.featured {
-    grid-column: span 2;
-    background: linear-gradient(135deg, var(--bg3) 0%, rgba(20,17,10,1) 100%);
-    border-left: 2px solid var(--gold-dark);
-  }
+/* ════════════════════════════════
+   DECORATIVE BAND between sections
+════════════════════════════════ */
+.cuisine-band {
+  width: 100%;
+  height: 3px;
+  margin: 10px 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold2), var(--gold3), var(--gold2), transparent);
+}
 
-  @media (max-width: 680px) {
-    .dish-card.featured { grid-column: span 1; }
-  }
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+footer {
+  background: linear-gradient(160deg, #1A0A02 0%, #2E1205 50%, #1A0805 100%);
+  text-align: center;
+  padding: 52px 24px;
+  position: relative;
+  overflow: hidden;
+}
+footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(232,184,75,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.foot-brand {
+  font-family: 'Playfair Display SC', serif;
+  font-size: 2.2rem;
+  color: var(--gold3);
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+.foot-sub {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--ivory3);
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.foot-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.foot-line span { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold2)); }
+.foot-line span.r { background: linear-gradient(90deg, var(--gold2), transparent); }
+.foot-line .fd { width: 6px; height: 6px; background: var(--gold2); transform: rotate(45deg); }
+footer p { font-size: 0.68rem; color: rgba(245,230,192,0.45); letter-spacing: 0.2em; text-transform: uppercase; }
 
-  /* ── FOOTER ── */
-  footer {
-    text-align: center;
-    padding: 40px 24px 60px;
-    border-top: 1px solid var(--border);
-    position: relative;
-  }
+/* ════════════════════════════════
+   ANIMATIONS
+════════════════════════════════ */
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  footer .foot-brand {
-    font-family: 'Cinzel', serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-  }
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  footer p {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    letter-spacing: 0.12em;
-    margin-top: 8px;
-    text-transform: uppercase;
-  }
+@keyframes floatSpark {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-140px) scale(1.2); }
+}
 
-  /* ── BADGE ── */
-  .badge {
-    display: inline-block;
-    padding: 3px 10px;
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border: 1px solid var(--gold-dark);
-    color: var(--gold);
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes sectionIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── ALL SECTIONS VIEW ── */
-  .show-all .menu-section { display: block; }
-
-  /* ── COUNT BADGE ── */
-  .count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px; height: 18px;
-    background: var(--gold-dark);
-    color: var(--cream);
-    font-size: 0.6rem;
-    font-weight: 500;
-    border-radius: 50%;
-    margin-left: 7px;
-    vertical-align: middle;
-  }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
+<!-- ══ HERO ══ -->
 <header class="hero">
-  <div class="brand-ornament">
-    <span class="ornament-line"></span>
-    <span class="diamond"></span>
-    <span class="ornament-line" style="background:linear-gradient(90deg,transparent,var(--gold),transparent);"></span>
+
+  <!-- corner ornaments -->
+  <svg class="hero-corner tl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10 L10 110" stroke="#C8962A" stroke-width="1"/>
+    <path d="M10 10 L110 10" stroke="#C8962A" stroke-width="1"/>
+    <path d="M10 10 L40 40" stroke="#C8962A" stroke-width="0.8" opacity="0.5"/>
+    <circle cx="10" cy="10" r="3" fill="#C8962A"/>
+    <circle cx="10" cy="60" r="2" fill="#C8962A" opacity="0.4"/>
+    <circle cx="60" cy="10" r="2" fill="#C8962A" opacity="0.4"/>
+    <rect x="5" y="5" width="6" height="6" fill="none" stroke="#C8962A" stroke-width="0.8" transform="rotate(45 8 8)"/>
+  </svg>
+  <svg class="hero-corner tr" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10 L10 110" stroke="#C8962A" stroke-width="1"/>
+    <path d="M10 10 L110 10" stroke="#C8962A" stroke-width="1"/>
+    <path d="M10 10 L40 40" stroke="#C8962A" stroke-width="0.8" opacity="0.5"/>
+    <circle cx="10" cy="10" r="3" fill="#C8962A"/>
+    <circle cx="10" cy="60" r="2" fill="#C8962A" opacity="0.4"/>
+    <circle cx="60" cy="10" r="2" fill="#C8962A" opacity="0.4"/>
+    <rect x="5" y="5" width="6" height="6" fill="none" stroke="#C8962A" stroke-width="0.8" transform="rotate(45 8 8)"/>
+  </svg>
+  <svg class="hero-corner bl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10 L10 110" stroke="#C8962A" stroke-width="1"/>
+    <path d="M10 10 L110 10" stroke="#C8962A" stroke-width="1"/>
+    <circle cx="10" cy="10" r="3" fill="#C8962A"/>
+  </svg>
+  <svg class="hero-corner br" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10 L10 110" stroke="#C8962A" stroke-width="1"/>
+    <path d="M10 10 L110 10" stroke="#C8962A" stroke-width="1"/>
+    <circle cx="10" cy="10" r="3" fill="#C8962A"/>
+  </svg>
+
+  <p class="hero-tag">Est. 2024 &nbsp;·&nbsp; Fine World Cuisine</p>
+
+  <div class="hero-divider">
+    <span class="hline"></span>
+    <span class="hdot sm"></span>
+    <span class="hdot"></span>
+    <span class="hdot sm"></span>
+    <span class="hline r"></span>
   </div>
-  <h1 class="brand-name">Delish_us</h1>
-  <p class="brand-tagline">A Culinary Journey Around the World</p>
-  <div class="subtitle-bar">
-    <span class="diamond" style="width:5px;height:5px;background:var(--gold);transform:rotate(45deg);"></span>
-    Fine Dining &nbsp;·&nbsp; Four Cuisines &nbsp;·&nbsp; Handcrafted with Passion
-    <span class="diamond" style="width:5px;height:5px;background:var(--gold);transform:rotate(45deg);"></span>
+
+  <h1 class="hero-title">Delish_us</h1>
+  <p class="hero-sub">A Grand Voyage Through World Flavours</p>
+
+  <div class="hero-pills">
+    <span class="hero-pill">🍜 Chinese</span>
+    <span class="hero-pill">🌴 South Indian</span>
+    <span class="hero-pill">🍛 North Indian</span>
+    <span class="hero-pill">🍕 Italian</span>
   </div>
 </header>
 
-<!-- STICKY NAV -->
-<nav class="nav-wrapper">
+<!-- ══ NAV ══ -->
+<nav class="nav-wrap">
   <div class="nav">
     <button class="nav-btn active" data-target="all">All Menus</button>
-    <button class="nav-btn" data-target="chinese">🍜 Chinese <span class="count">5</span></button>
-    <button class="nav-btn" data-target="south">🌴 South Indian <span class="count">8</span></button>
-    <button class="nav-btn" data-target="north">🍛 North Indian <span class="count">7</span></button>
-    <button class="nav-btn" data-target="italian">🍕 Italian <span class="count">6</span></button>
+    <button class="nav-btn" data-target="chinese"><span class="nav-icon">🍜</span>Chinese<span class="nbadge">5</span></button>
+    <button class="nav-btn" data-target="south"><span class="nav-icon">🌴</span>South Indian<span class="nbadge">8</span></button>
+    <button class="nav-btn" data-target="north"><span class="nav-icon">🍛</span>North Indian<span class="nbadge">7</span></button>
+    <button class="nav-btn" data-target="italian"><span class="nav-icon">🍕</span>Italian<span class="nbadge">6</span></button>
   </div>
 </nav>
 
-<!-- MENU -->
-<main class="menu-sections show-all" id="menu-main">
+<!-- ══ MENU MAIN ══ -->
+<main id="menu-main" class="show-all">
 
-  <!-- CHINESE -->
+  <!-- ── CHINESE ── -->
   <section class="menu-section active" id="sec-chinese">
-    <div class="section-header">
-      <span class="section-emoji">🍜</span>
-      <h2 class="section-title">Noodles &amp; Rice Dishes</h2>
-      <p class="section-desc">Flavours of the Orient — wok-kissed and slow-simmered</p>
-      <div class="section-divider">
-        <span></span><span class="gem"></span><span></span>
+    <div class="sec-header">
+      <p class="sec-kicker">From the Orient</p>
+      <h2 class="sec-title">Noodles &amp; Rice Dishes</h2>
+      <p class="sec-italic">Wok-kissed, hand-pulled &amp; slow-simmered to perfection</p>
+      <div class="sec-rule">
+        <span class="rline"></span>
+        <span class="rdot"></span>
+        <span class="rline r"></span>
       </div>
     </div>
     <div class="dish-grid">
-      <div class="dish-card featured">
+      <div class="dish-card wide">
         <span class="dish-emoji">🍜</span>
-        <span class="dish-name">Chow Mein <span class="badge">Signature</span></span>
-        <span class="dish-sub">Stir-fried wok noodles</span>
-        <div class="dish-corner"></div>
+        <span class="dish-name">Chow Mein</span>
+        <span class="dish-desc">Stir-fried wok noodles</span>
+        <span class="dish-tag">Signature</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍚</span>
         <span class="dish-name">Yangzhou Fried Rice</span>
-        <span class="dish-sub">Classic Cantonese</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Classic Cantonese</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🌶️</span>
         <span class="dish-name">Dan Dan Noodles</span>
-        <span class="dish-sub">Sichuan · Fiery &amp; Bold</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Sichuan spicy</span>
+        <span class="dish-tag">Spicy</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍲</span>
         <span class="dish-name">Beef Noodle Soup</span>
-        <span class="dish-sub">Slow-braised broth</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Rich braised broth</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍜</span>
         <span class="dish-name">Hand-Pulled Noodles</span>
-        <span class="dish-sub">La Mian · Artisan craft</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">La Mian · Artisan craft</span>
+        <span class="dish-tag">Chef's Art</span>
       </div>
     </div>
   </section>
 
-  <!-- SOUTH INDIAN -->
+  <div class="cuisine-band" id="band1"></div>
+
+  <!-- ── SOUTH INDIAN ── -->
   <section class="menu-section active" id="sec-south">
-    <div class="section-header">
-      <span class="section-emoji">🌴</span>
-      <h2 class="section-title">South Indian Specials</h2>
-      <p class="section-desc">Authentic flavours from the Southern kitchens of India</p>
-      <div class="section-divider">
-        <span></span><span class="gem"></span><span></span>
+    <div class="sec-header">
+      <p class="sec-kicker">Straight from Southern India</p>
+      <h2 class="sec-title">South Indian Specials</h2>
+      <p class="sec-italic">Crisp dosas, comforting rice plates &amp; temple-town aromas</p>
+      <div class="sec-rule">
+        <span class="rline"></span>
+        <span class="rdot"></span>
+        <span class="rline r"></span>
       </div>
     </div>
     <div class="dish-grid">
-      <div class="dish-card featured">
+      <div class="dish-card wide">
         <span class="dish-emoji">🥞</span>
-        <span class="dish-name">Masala Dosa <span class="badge">Classic</span></span>
-        <span class="dish-sub">Crisp crepe · Spiced potato</span>
-        <div class="dish-corner"></div>
+        <span class="dish-name">Masala Dosa</span>
+        <span class="dish-desc">Crisp rice crepe · Spiced potato filling</span>
+        <span class="dish-tag">Classic</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🧈</span>
         <span class="dish-name">Ghee Roast Dosa</span>
-        <span class="dish-sub">Golden &amp; fragrant</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Golden &amp; fragrant</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🧀</span>
         <span class="dish-name">Cheese Dosa</span>
-        <span class="dish-sub">Fusion delight</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Fusion delight</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍚</span>
-        <span class="dish-name">Idli <span style="color:var(--text-muted);font-size:0.85rem;">(2 pcs)</span></span>
-        <span class="dish-sub">Steamed rice cakes</span>
-        <div class="dish-corner"></div>
+        <span class="dish-name">Idli <small style="font-weight:400;font-size:0.85rem;">(2 pcs)</small></span>
+        <span class="dish-desc">Steamed rice cakes</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🥯</span>
         <span class="dish-name">Medu Vada</span>
-        <span class="dish-sub">Crispy lentil fritters</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Crispy lentil fritters</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍛</span>
         <span class="dish-name">Sambar Rice</span>
-        <span class="dish-sub">Comfort in a bowl</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Comfort in a bowl</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍋</span>
         <span class="dish-name">Lemon Rice</span>
-        <span class="dish-sub">Zesty &amp; light</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Zesty &amp; light</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍲</span>
         <span class="dish-name">South Indian Meals</span>
-        <span class="dish-sub">Full &amp; Mini thali</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Full / Mini thali</span>
+        <span class="dish-tag">Complete Meal</span>
       </div>
     </div>
   </section>
 
-  <!-- NORTH INDIAN -->
+  <div class="cuisine-band" id="band2"></div>
+
+  <!-- ── NORTH INDIAN ── -->
   <section class="menu-section active" id="sec-north">
-    <div class="section-header">
-      <span class="section-emoji">🍛</span>
-      <h2 class="section-title">North Indian Delights</h2>
-      <p class="section-desc">Rich gravies, tandoor-fired breads &amp; aromatic biryanis</p>
-      <div class="section-divider">
-        <span></span><span class="gem"></span><span></span>
+    <div class="sec-header">
+      <p class="sec-kicker">The Grand Mughal Table</p>
+      <h2 class="sec-title">North Indian Delights</h2>
+      <p class="sec-italic">Rich gravies, tandoor-fired breads &amp; dum-cooked biryanis</p>
+      <div class="sec-rule">
+        <span class="rline"></span>
+        <span class="rdot"></span>
+        <span class="rline r"></span>
       </div>
     </div>
     <div class="dish-grid">
-      <div class="dish-card featured">
+      <div class="dish-card wide">
         <span class="dish-emoji">🍗</span>
-        <span class="dish-name">Butter Chicken <span class="badge">Bestseller</span></span>
-        <span class="dish-sub">Velvety tomato &amp; cream</span>
-        <div class="dish-corner"></div>
+        <span class="dish-name">Butter Chicken</span>
+        <span class="dish-desc">Velvety tomato cream sauce</span>
+        <span class="dish-tag">Bestseller</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🧀</span>
         <span class="dish-name">Paneer Butter Masala</span>
-        <span class="dish-sub">Vegetarian indulgence</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Vegetarian indulgence</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍛</span>
         <span class="dish-name">Dal Tadka</span>
-        <span class="dish-sub">Tempered golden lentils</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Tempered golden lentils</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🫓</span>
         <span class="dish-name">Butter Naan</span>
-        <span class="dish-sub">Tandoor-baked bread</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Tandoor-baked bread</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🧈</span>
         <span class="dish-name">Tandoori Roti</span>
-        <span class="dish-sub">Whole wheat classic</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Whole wheat · Rustic</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍚</span>
         <span class="dish-name">Veg / Chicken Biryani</span>
-        <span class="dish-sub">Dum-cooked aromatic rice</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Dum-cooked aromatic rice</span>
+        <span class="dish-tag">Chef's Pick</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🥔</span>
         <span class="dish-name">Aloo Gobi</span>
-        <span class="dish-sub">Spiced potato &amp; cauliflower</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Spiced potato &amp; cauliflower</span>
       </div>
     </div>
   </section>
 
-  <!-- ITALIAN -->
+  <div class="cuisine-band" id="band3"></div>
+
+  <!-- ── ITALIAN ── -->
   <section class="menu-section active" id="sec-italian">
-    <div class="section-header">
-      <span class="section-emoji">🍕</span>
-      <h2 class="section-title">Italian Classics</h2>
-      <p class="section-desc">Stone-baked pizzas, handmade pastas &amp; timeless Italian soul</p>
-      <div class="section-divider">
-        <span></span><span class="gem"></span><span></span>
+    <div class="sec-header">
+      <p class="sec-kicker">La Cucina Italiana</p>
+      <h2 class="sec-title">Italian Classics</h2>
+      <p class="sec-italic">Stone-baked pizzas, handmade pastas &amp; timeless Italian soul</p>
+      <div class="sec-rule">
+        <span class="rline"></span>
+        <span class="rdot"></span>
+        <span class="rline r"></span>
       </div>
     </div>
     <div class="dish-grid">
-      <div class="dish-card featured">
+      <div class="dish-card wide">
         <span class="dish-emoji">🍕</span>
-        <span class="dish-name">Margherita Pizza <span class="badge">Chef's Pick</span></span>
-        <span class="dish-sub">San Marzano · Fresh mozzarella · Basil</span>
-        <div class="dish-corner"></div>
+        <span class="dish-name">Margherita Pizza</span>
+        <span class="dish-desc">San Marzano · Fresh Mozzarella · Basil</span>
+        <span class="dish-tag">Chef's Pick</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍕</span>
         <span class="dish-name">Farmhouse Pizza</span>
-        <span class="dish-sub">Garden-fresh toppings</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Garden-fresh toppings</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍝</span>
         <span class="dish-name">White Sauce Pasta</span>
-        <span class="dish-sub">Béchamel · Creamy &amp; rich</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Béchamel · Creamy</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🍝</span>
         <span class="dish-name">Red Sauce Pasta</span>
-        <span class="dish-sub">Pomodoro · Rustic Italian</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Pomodoro · Rustic</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🧀</span>
         <span class="dish-name">Lasagna</span>
-        <span class="dish-sub">Layered · Slow-baked</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Layered · Slow-baked</span>
       </div>
       <div class="dish-card">
         <span class="dish-emoji">🥖</span>
         <span class="dish-name">Garlic Bread</span>
-        <span class="dish-sub">Herb butter · Crisp &amp; golden</span>
-        <div class="dish-corner"></div>
+        <span class="dish-desc">Herb butter · Crisp &amp; golden</span>
       </div>
     </div>
   </section>
 
 </main>
 
-<!-- FOOTER -->
+<!-- ══ FOOTER ══ -->
 <footer>
-  <div class="brand-ornament" style="margin-bottom:16px;">
-    <span class="ornament-line"></span>
-    <span class="diamond"></span>
-    <span class="ornament-line" style="background:linear-gradient(90deg,transparent,var(--gold),transparent);"></span>
+  <div class="foot-line">
+    <span></span><span class="fd"></span><span class="r"></span>
   </div>
   <p class="foot-brand">Delish_us</p>
-  <p>Crafted with love &nbsp;·&nbsp; Served with elegance</p>
+  <p class="foot-sub">Crafted with love · Served with elegance</p>
+  <div class="foot-line" style="margin-top:16px;">
+    <span></span><span class="fd"></span><span class="r"></span>
+  </div>
+  <p style="margin-top:14px;">© 2024 Delish_us &nbsp;·&nbsp; All rights reserved</p>
 </footer>
 
 <script>
-  const btns = document.querySelectorAll('.nav-btn');
-  const main = document.getElementById('menu-main');
-  const sections = {
-    chinese: document.getElementById('sec-chinese'),
-    south:   document.getElementById('sec-south'),
-    north:   document.getElementById('sec-north'),
-    italian: document.getElementById('sec-italian'),
-  };
+// ── Sparkles in hero ──
+(function() {
+  const hero = document.querySelector('.hero');
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.cssText = `
+      left: ${Math.random() * 100}%;
+      bottom: ${Math.random() * 40}%;
+      animation-duration: ${2.5 + Math.random() * 3}s;
+      animation-delay: ${Math.random() * 4}s;
+      font-size: ${0.5 + Math.random() * 0.6}rem;
+    `;
+    hero.appendChild(s);
+  }
+})();
 
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const target = btn.dataset.target;
+// ── Nav filter ──
+const btns  = document.querySelectorAll('.nav-btn');
+const main  = document.getElementById('menu-main');
+const bands = document.querySelectorAll('.cuisine-band');
+const secs  = {
+  chinese: document.getElementById('sec-chinese'),
+  south:   document.getElementById('sec-south'),
+  north:   document.getElementById('sec-north'),
+  italian: document.getElementById('sec-italian'),
+};
 
-      if (target === 'all') {
-        main.classList.add('show-all');
-        Object.values(sections).forEach(s => s.classList.add('active'));
-      } else {
-        main.classList.remove('show-all');
-        Object.values(sections).forEach(s => s.classList.remove('active'));
-        sections[target].classList.add('active');
-        sections[target].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = btn.dataset.target;
+
+    if (t === 'all') {
+      Object.values(secs).forEach(s => s.classList.add('active'));
+      bands.forEach(b => b.style.display = '');
+    } else {
+      Object.entries(secs).forEach(([k, s]) => {
+        s.classList.toggle('active', k === t);
+      });
+      bands.forEach(b => b.style.display = 'none');
+      secs[t].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
+});
 
-  // Staggered card entrance on load
-  const cards = document.querySelectorAll('.dish-card');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        entry.target.style.animation = `sectionIn 0.5s ${i * 0.05}s ease both`;
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  cards.forEach(c => observer.observe(c));
+// ── Staggered card entrance ──
+const cards = document.querySelectorAll('.dish-card');
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, idx) => {
+    if (e.isIntersecting) {
+      const delay = idx * 0.06;
+      e.target.style.animation = `cardIn 0.5s ${delay}s ease both`;
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+cards.forEach(c => { c.style.opacity = '0'; io.observe(c); });
 </script>
 </body>
 </html>
