@@ -3,732 +3,685 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DeliHeaven — Homemade Goodness</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<title>Delish_us — Fine Dining Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #FBF5EC;
-    --honey: #E8A838;
-    --gold: #C47F17;
-    --brown: #3E2003;
-    --warm: #7A3B0F;
-    --sage: #7D9B6A;
-    --blush: #F2D5B0;
-    --dark: #1C0A00;
-    --wa: #25D366;
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8CB7A;
+    --gold-dark: #8B6914;
+    --cream: #F5EDD8;
+    --bg: #0C0B09;
+    --bg2: #131210;
+    --bg3: #1A1815;
+    --text: #EDE6D6;
+    --text-muted: #9A8E78;
+    --border: rgba(201,168,76,0.2);
+  }
 
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--brown);
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
   /* ── NOISE TEXTURE OVERLAY ── */
   body::before {
     content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 9999; opacity: 0.4;
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
   }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; width: 100%; z-index: 1000;
-    padding: 18px 5%;
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(251,245,236,0.88);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(232,168,56,0.2);
-    transition: all 0.3s;
-  }
-  .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem; font-weight: 900;
-    color: var(--warm);
-    letter-spacing: -0.5px;
-  }
-  .logo span { color: var(--honey); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    text-decoration: none; color: var(--brown);
-    font-size: 0.85rem; font-weight: 500;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    position: relative; padding-bottom: 3px;
-    transition: color 0.2s;
-  }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: 0; left: 0;
-    width: 0; height: 1.5px; background: var(--honey);
-    transition: width 0.3s;
-  }
-  .nav-links a:hover { color: var(--honey); }
-  .nav-links a:hover::after { width: 100%; }
-  .nav-cta {
-    background: var(--honey); color: #fff;
-    border: none; padding: 10px 22px;
-    border-radius: 50px; font-size: 0.85rem;
-    font-weight: 500; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: background 0.2s, transform 0.2s;
-  }
-  .nav-cta:hover { background: var(--gold); transform: scale(1.04); }
 
   /* ── HERO ── */
   .hero {
-    min-height: 100vh;
-    display: grid; grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 100px 5% 60px;
-    gap: 4rem;
     position: relative;
+    text-align: center;
+    padding: 90px 24px 60px;
     overflow: hidden;
   }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 80% at 70% 50%, rgba(232,168,56,0.12) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 50% at 10% 80%, rgba(125,155,106,0.1) 0%, transparent 50%);
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
     pointer-events: none;
   }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(232,168,56,0.15);
-    border: 1px solid rgba(232,168,56,0.35);
-    padding: 6px 14px; border-radius: 50px;
-    font-size: 0.75rem; font-weight: 500;
-    color: var(--gold); letter-spacing: 0.08em;
-    text-transform: uppercase; margin-bottom: 1.2rem;
-    animation: fadeUp 0.8s ease both;
-  }
-  .hero-badge::before { content: '✦'; font-size: 0.6rem; }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    line-height: 1.08; font-weight: 900;
-    color: var(--dark);
-    animation: fadeUp 0.9s 0.1s ease both;
-  }
-  .hero h1 em {
-    font-style: italic; color: var(--honey);
-    display: block;
-  }
-  .hero-sub {
-    margin-top: 1.4rem;
-    font-size: 1.05rem; color: var(--warm);
-    line-height: 1.7; max-width: 440px;
-    font-weight: 300;
-    animation: fadeUp 1s 0.2s ease both;
-  }
-  .hero-actions {
-    display: flex; gap: 1rem; align-items: center;
-    margin-top: 2.4rem;
-    animation: fadeUp 1s 0.3s ease both;
-  }
-  .btn-primary {
-    background: var(--brown); color: var(--cream);
-    padding: 14px 32px; border-radius: 50px;
-    font-size: 0.9rem; font-weight: 500;
-    text-decoration: none; display: inline-block;
-    transition: background 0.2s, transform 0.2s;
-  }
-  .btn-primary:hover { background: var(--warm); transform: translateY(-2px); }
-  .btn-secondary {
-    color: var(--brown); font-size: 0.9rem;
-    display: flex; align-items: center; gap: 8px;
-    text-decoration: none; font-weight: 500;
-    transition: gap 0.2s;
-  }
-  .btn-secondary:hover { gap: 12px; color: var(--honey); }
-  .btn-secondary span { font-size: 1.1rem; }
 
-  .hero-visual {
-    display: flex; justify-content: center;
-    animation: fadeIn 1.2s 0.2s ease both;
+  .brand-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 20px;
+    animation: fadeDown 1s ease both;
+  }
+
+  .ornament-line {
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--cream);
+    line-height: 1;
+    animation: fadeDown 1s 0.15s ease both;
+    opacity: 0;
+  }
+
+  .brand-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    margin-top: 10px;
+    animation: fadeDown 1s 0.3s ease both;
+    opacity: 0;
+  }
+
+  .subtitle-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding: 8px 24px;
+    border: 1px solid var(--border);
+    background: rgba(201,168,76,0.04);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    animation: fadeDown 1s 0.45s ease both;
+    opacity: 0;
+  }
+
+  /* ── NAVIGATION ── */
+  .nav-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(12,11,9,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 clamp(16px, 5vw, 80px);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    padding: 18px 24px;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%; right: 50%;
+    height: 1.5px;
+    background: var(--gold);
+    transition: left 0.3s, right 0.3s;
+  }
+
+  .nav-btn:hover { color: var(--cream); }
+  .nav-btn.active { color: var(--gold); }
+  .nav-btn.active::after { left: 20%; right: 20%; }
+
+  /* ── MENU CONTENT ── */
+  .menu-sections {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 5vw, 80px) 100px;
+  }
+
+  .menu-section {
+    display: none;
+    animation: sectionIn 0.5s ease both;
+  }
+  .menu-section.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    text-align: center;
+    padding: 72px 0 52px;
     position: relative;
   }
-  .hero-plate {
-    width: min(420px, 90vw); aspect-ratio: 1;
-    background: radial-gradient(circle at 40% 40%, #F5DFB0, #E8A838 80%);
-    border-radius: 50%; position: relative;
-    box-shadow: 0 40px 80px rgba(196,127,23,0.3), inset 0 -10px 20px rgba(0,0,0,0.05);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .hero-plate-inner {
-    font-size: 7rem; animation: float 3s ease-in-out infinite;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
-  }
-  .plate-deco {
-    position: absolute; border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.3);
-  }
-  .plate-deco:nth-child(1) { inset: 15px; }
-  .plate-deco:nth-child(2) { inset: 30px; }
 
-  .floating-pill {
-    position: absolute; background: white;
-    border-radius: 50px; padding: 8px 16px;
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.8rem; font-weight: 500; color: var(--brown);
-    box-shadow: 0 8px 24px rgba(62,32,3,0.12);
-    animation: float 3s ease-in-out infinite;
+  .section-emoji {
+    font-size: 2.8rem;
+    display: block;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
   }
-  .pill-1 { top: 8%; left: -5%; animation-delay: 0s; }
-  .pill-2 { bottom: 12%; right: -8%; animation-delay: 1s; }
-  .pill-3 { top: 50%; left: -10%; animation-delay: 2s; }
-  .pill-icon { font-size: 1.1rem; }
 
-  /* ── MARQUEE ── */
-  .marquee-wrap {
-    background: var(--brown); color: var(--honey);
-    padding: 14px 0; overflow: hidden;
-  }
-  .marquee-track {
-    display: flex; gap: 3rem;
-    animation: marquee 20s linear infinite;
-    white-space: nowrap; width: max-content;
-  }
-  .marquee-item {
-    display: flex; align-items: center; gap: 1rem;
-    font-size: 0.8rem; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
-  }
-  .marquee-sep { color: rgba(232,168,56,0.4); font-size: 0.5rem; }
-
-  /* ── SECTION SHARED ── */
-  section { padding: 90px 5%; }
-  .section-tag {
-    font-size: 0.72rem; font-weight: 500;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--honey); margin-bottom: 0.8rem;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-tag::before { content: ''; display: block; width: 24px; height: 1.5px; background: var(--honey); }
   .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    font-weight: 900; line-height: 1.1; color: var(--dark);
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--cream);
+    margin-bottom: 8px;
   }
-  .section-title em { font-style: italic; color: var(--honey); }
 
-  /* ── PRODUCTS ── */
-  .products { background: #fff; }
-  .products-header { text-align: center; margin-bottom: 4rem; }
-  .products-header .section-tag { justify-content: center; }
-  .products-header .section-tag::before { display: none; }
-
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.8rem;
-  }
-  .product-card {
-    background: var(--cream); border-radius: 20px;
-    overflow: hidden; position: relative;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-    border: 1px solid rgba(232,168,56,0.15);
-  }
-  .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 60px rgba(62,32,3,0.12);
-  }
-  .product-card:hover .product-img { transform: scale(1.06); }
-  .product-img-wrap {
-    height: 220px; overflow: hidden;
-    background: radial-gradient(circle at 50% 60%, var(--blush), var(--honey));
-    display: flex; align-items: center; justify-content: center;
-  }
-  .product-img { font-size: 5.5rem; transition: transform 0.4s; }
-  .product-body { padding: 1.4rem; }
-  .product-label {
-    font-size: 0.68rem; text-transform: uppercase;
-    letter-spacing: 0.12em; color: var(--sage);
-    font-weight: 500; margin-bottom: 0.4rem;
-  }
-  .product-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem; font-weight: 700; color: var(--dark);
-    margin-bottom: 0.5rem;
-  }
-  .product-desc { font-size: 0.85rem; color: var(--warm); line-height: 1.6; font-weight: 300; }
-  .product-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.4rem; border-top: 1px solid rgba(232,168,56,0.12);
-  }
-  .product-tag {
-    background: rgba(125,155,106,0.15); color: var(--sage);
-    font-size: 0.7rem; font-weight: 500; padding: 4px 10px; border-radius: 50px;
+  .section-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-muted);
     letter-spacing: 0.06em;
+    margin-bottom: 24px;
   }
-  .product-order {
-    background: var(--honey); color: #fff;
-    border: none; padding: 8px 18px; border-radius: 50px;
-    font-size: 0.78rem; font-weight: 500; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; text-decoration: none;
-    display: inline-block; transition: background 0.2s;
-  }
-  .product-order:hover { background: var(--gold); }
 
-  /* ── ABOUT ── */
-  .about {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 6rem; align-items: center;
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
   }
-  .about-visual {
-    position: relative; aspect-ratio: 0.9;
-  }
-  .about-card-main {
-    width: 80%; aspect-ratio: 1;
-    background: linear-gradient(135deg, var(--honey) 0%, var(--gold) 100%);
-    border-radius: 30px; position: absolute;
-    top: 0; left: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 6rem;
-    box-shadow: 0 30px 60px rgba(196,127,23,0.3);
-  }
-  .about-card-accent {
-    position: absolute; bottom: 0; right: 0;
-    width: 55%; aspect-ratio: 1;
-    background: var(--brown); border-radius: 24px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    color: var(--honey); gap: 4px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  }
-  .about-stat { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; }
-  .about-stat-label { font-size: 0.75rem; font-weight: 300; color: var(--blush); letter-spacing: 0.08em; }
-  .about-content .section-title { margin-bottom: 1.4rem; }
-  .about-text { font-size: 1rem; line-height: 1.8; color: var(--warm); font-weight: 300; margin-bottom: 2rem; }
-  .about-features { display: flex; flex-direction: column; gap: 1rem; }
-  .feat {
-    display: flex; align-items: flex-start; gap: 1rem;
-    padding: 1rem; border-radius: 14px;
-    border: 1px solid rgba(232,168,56,0.15);
-    background: rgba(232,168,56,0.04);
-    transition: background 0.2s;
-  }
-  .feat:hover { background: rgba(232,168,56,0.1); }
-  .feat-icon { font-size: 1.5rem; margin-top: 2px; }
-  .feat-title { font-weight: 600; color: var(--dark); font-size: 0.9rem; }
-  .feat-desc { font-size: 0.82rem; color: var(--warm); font-weight: 300; margin-top: 2px; line-height: 1.5; }
 
-  /* ── WHY ── */
-  .why { background: var(--brown); color: var(--cream); text-align: center; }
-  .why .section-tag { justify-content: center; color: var(--honey); }
-  .why .section-tag::before { display: none; }
-  .why .section-title { color: var(--cream); }
-  .why .section-title em { color: var(--honey); }
-  .why-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem; margin-top: 3.5rem;
+  .section-divider span {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
   }
-  .why-item {
-    padding: 2rem 1.5rem; border-radius: 20px;
-    border: 1px solid rgba(232,168,56,0.18);
-    background: rgba(255,255,255,0.03);
-    transition: background 0.3s, transform 0.3s;
-  }
-  .why-item:hover { background: rgba(232,168,56,0.1); transform: translateY(-4px); }
-  .why-ico { font-size: 2.4rem; margin-bottom: 1rem; display: block; }
-  .why-item h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem; color: var(--honey);
-    margin-bottom: 0.5rem;
-  }
-  .why-item p { font-size: 0.83rem; color: rgba(251,245,236,0.65); line-height: 1.6; font-weight: 300; }
 
-  /* ── CTA ── */
-  .cta-section {
-    background: linear-gradient(135deg, var(--honey) 0%, var(--gold) 100%);
-    text-align: center; padding: 80px 5%;
-    position: relative; overflow: hidden;
+  .section-divider span:last-child {
+    background: linear-gradient(90deg, var(--gold), transparent);
   }
-  .cta-section::before {
-    content: ''; position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E");
+
+  .section-divider .gem {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    transform: rotate(45deg);
   }
-  .cta-section h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 900; color: #fff;
-    margin-bottom: 1rem; position: relative;
+
+  /* ── DISH GRID ── */
+  .dish-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
   }
-  .cta-section h2 em { font-style: italic; color: var(--dark); }
-  .cta-section p { color: rgba(255,255,255,0.85); font-size: 1rem; margin-bottom: 2.4rem; font-weight: 300; position: relative; }
-  .cta-wa {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: #fff; color: var(--brown);
-    padding: 16px 36px; border-radius: 50px;
-    font-size: 1rem; font-weight: 600;
-    text-decoration: none; position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+
+  .dish-card {
+    background: var(--bg2);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.35s;
   }
-  .cta-wa:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(0,0,0,0.2); }
-  .cta-wa-icon { font-size: 1.3rem; }
+
+  .dish-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .dish-card:hover { background: var(--bg3); }
+  .dish-card:hover::before { transform: scaleX(1); }
+
+  .dish-emoji {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 14px;
+    transition: transform 0.3s;
+  }
+  .dish-card:hover .dish-emoji { transform: scale(1.15); }
+
+  .dish-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+
+  .dish-sub {
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    display: block;
+  }
+
+  .dish-corner {
+    position: absolute;
+    bottom: 16px; right: 20px;
+    width: 20px; height: 20px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .dish-card:hover .dish-corner { opacity: 1; }
+
+  /* ── FEATURED ITEM ── */
+  .dish-card.featured {
+    grid-column: span 2;
+    background: linear-gradient(135deg, var(--bg3) 0%, rgba(20,17,10,1) 100%);
+    border-left: 2px solid var(--gold-dark);
+  }
+
+  @media (max-width: 680px) {
+    .dish-card.featured { grid-column: span 1; }
+  }
 
   /* ── FOOTER ── */
   footer {
-    background: var(--dark); color: rgba(251,245,236,0.6);
-    padding: 50px 5% 30px;
+    text-align: center;
+    padding: 40px 24px 60px;
+    border-top: 1px solid var(--border);
+    position: relative;
   }
-  .footer-top {
-    display: flex; justify-content: space-between;
-    align-items: flex-start; gap: 3rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid rgba(232,168,56,0.12);
-    flex-wrap: wrap;
-  }
-  .footer-brand .logo { font-size: 1.8rem; display: block; margin-bottom: 0.8rem; }
-  .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 260px; font-weight: 300; }
-  .footer-links h4 {
-    color: var(--honey); font-size: 0.75rem;
-    text-transform: uppercase; letter-spacing: 0.12em;
-    margin-bottom: 1rem; font-weight: 500;
-  }
-  .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .footer-links a {
-    color: rgba(251,245,236,0.55); text-decoration: none;
-    font-size: 0.85rem; font-weight: 300;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--honey); }
-  .footer-bottom {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-top: 2rem; font-size: 0.78rem; flex-wrap: wrap; gap: 1rem;
-  }
-  .footer-bottom a { color: var(--honey); text-decoration: none; }
 
-  /* ── FLOATING WHATSAPP ── */
-  .wa-float {
-    position: fixed; bottom: 28px; right: 28px; z-index: 9000;
-    display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+  footer .foot-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
   }
-  .wa-tooltip {
-    background: var(--dark); color: var(--cream);
-    padding: 8px 14px; border-radius: 10px;
-    font-size: 0.78rem; font-weight: 400;
-    white-space: nowrap;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    opacity: 0; transform: translateX(8px);
-    transition: opacity 0.25s, transform 0.25s;
-    pointer-events: none;
+
+  footer p {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    margin-top: 8px;
+    text-transform: uppercase;
   }
-  .wa-float:hover .wa-tooltip { opacity: 1; transform: translateX(0); }
-  .wa-btn {
-    width: 60px; height: 60px; border-radius: 50%;
-    background: var(--wa);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 6px 24px rgba(37,211,102,0.45);
-    text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
-    animation: waPulse 2.5s ease-in-out infinite;
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    margin-left: 8px;
+    vertical-align: middle;
   }
-  .wa-btn:hover { transform: scale(1.1); box-shadow: 0 10px 30px rgba(37,211,102,0.55); }
-  .wa-icon { width: 32px; height: 32px; fill: #fff; }
 
   /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes fadeIn {
-    from { opacity: 0; } to { opacity: 1; }
-  }
-  @keyframes float {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-12px); }
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-  @keyframes waPulse {
-    0%,100% { box-shadow: 0 6px 24px rgba(37,211,102,0.45); }
-    50%      { box-shadow: 0 6px 36px rgba(37,211,102,0.7), 0 0 0 10px rgba(37,211,102,0.1); }
+
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    nav { padding: 14px 5%; }
-    .nav-links, .nav-cta { display: none; }
-    .hero { grid-template-columns: 1fr; padding: 100px 5% 50px; gap: 2rem; }
-    .hero-visual { order: -1; }
-    .hero-plate { width: 280px; }
-    .hero h1 { font-size: 2.6rem; }
-    .about { grid-template-columns: 1fr; gap: 3rem; }
-    .footer-top { flex-direction: column; gap: 2rem; }
+  /* ── ALL SECTIONS VIEW ── */
+  .show-all .menu-section { display: block; }
+
+  /* ── COUNT BADGE ── */
+  .count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    background: var(--gold-dark);
+    color: var(--cream);
+    font-size: 0.6rem;
+    font-weight: 500;
+    border-radius: 50%;
+    margin-left: 7px;
+    vertical-align: middle;
   }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
-<nav>
-  <div class="logo">Deli<span>Heaven</span></div>
-  <ul class="nav-links">
-    <li><a href="#products">Products</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#why">Why Us</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a href="https://wa.me/919445002264?text=Hi%20DeliHeaven!%20I%20want%20to%20order." class="nav-cta" target="_blank">Order Now</a>
+<!-- HERO -->
+<header class="hero">
+  <div class="brand-ornament">
+    <span class="ornament-line"></span>
+    <span class="diamond"></span>
+    <span class="ornament-line" style="background:linear-gradient(90deg,transparent,var(--gold),transparent);"></span>
+  </div>
+  <h1 class="brand-name">Delish_us</h1>
+  <p class="brand-tagline">A Culinary Journey Around the World</p>
+  <div class="subtitle-bar">
+    <span class="diamond" style="width:5px;height:5px;background:var(--gold);transform:rotate(45deg);"></span>
+    Fine Dining &nbsp;·&nbsp; Four Cuisines &nbsp;·&nbsp; Handcrafted with Passion
+    <span class="diamond" style="width:5px;height:5px;background:var(--gold);transform:rotate(45deg);"></span>
+  </div>
+</header>
+
+<!-- STICKY NAV -->
+<nav class="nav-wrapper">
+  <div class="nav">
+    <button class="nav-btn active" data-target="all">All Menus</button>
+    <button class="nav-btn" data-target="chinese">🍜 Chinese <span class="count">5</span></button>
+    <button class="nav-btn" data-target="south">🌴 South Indian <span class="count">8</span></button>
+    <button class="nav-btn" data-target="north">🍛 North Indian <span class="count">7</span></button>
+    <button class="nav-btn" data-target="italian">🍕 Italian <span class="count">6</span></button>
+  </div>
 </nav>
 
-<!-- ── HERO ── -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-badge">Pure Homemade · No Preservatives</div>
-    <h1>Where Every Bite <em>Feels Like Heaven</em></h1>
-    <p class="hero-sub">Crafted with love in our home kitchen — artisan sweets, protein-rich bites, crunchy granola bars and nature's finest treats, made fresh just for you.</p>
-    <div class="hero-actions">
-      <a href="#products" class="btn-primary">Explore Menu</a>
-      <a href="https://wa.me/919445002264?text=Hi!%20I'd%20like%20to%20know%20more%20about%20your%20products." class="btn-secondary" target="_blank">
-        <span>💬</span> Chat with Us
-      </a>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="hero-plate">
-      <div class="plate-deco"></div>
-      <div class="plate-deco"></div>
-      <div class="hero-plate-inner">🍯</div>
-    </div>
-    <div class="floating-pill pill-1"><span class="pill-icon">🍫</span> No Refined Sugar</div>
-    <div class="floating-pill pill-2"><span class="pill-icon">💪</span> High Protein</div>
-    <div class="floating-pill pill-3"><span class="pill-icon">🌿</span> 100% Natural</div>
-  </div>
-</section>
+<!-- MENU -->
+<main class="menu-sections show-all" id="menu-main">
 
-<!-- ── MARQUEE ── -->
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <span class="marquee-item">🍮 Homemade Sweets <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">💪 Protein Bites <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🌾 Granola Bars <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🌿 Natural Sweets <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🏠 Made with Love <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🚚 Fresh Delivery <span class="marquee-sep">✦</span></span>
-    <!-- Duplicate for seamless loop -->
-    <span class="marquee-item">🍮 Homemade Sweets <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">💪 Protein Bites <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🌾 Granola Bars <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🌿 Natural Sweets <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🏠 Made with Love <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">🚚 Fresh Delivery <span class="marquee-sep">✦</span></span>
-  </div>
-</div>
+  <!-- CHINESE -->
+  <section class="menu-section active" id="sec-chinese">
+    <div class="section-header">
+      <span class="section-emoji">🍜</span>
+      <h2 class="section-title">Noodles &amp; Rice Dishes</h2>
+      <p class="section-desc">Flavours of the Orient — wok-kissed and slow-simmered</p>
+      <div class="section-divider">
+        <span></span><span class="gem"></span><span></span>
+      </div>
+    </div>
+    <div class="dish-grid">
+      <div class="dish-card featured">
+        <span class="dish-emoji">🍜</span>
+        <span class="dish-name">Chow Mein <span class="badge">Signature</span></span>
+        <span class="dish-sub">Stir-fried wok noodles</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍚</span>
+        <span class="dish-name">Yangzhou Fried Rice</span>
+        <span class="dish-sub">Classic Cantonese</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🌶️</span>
+        <span class="dish-name">Dan Dan Noodles</span>
+        <span class="dish-sub">Sichuan · Fiery &amp; Bold</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍲</span>
+        <span class="dish-name">Beef Noodle Soup</span>
+        <span class="dish-sub">Slow-braised broth</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍜</span>
+        <span class="dish-name">Hand-Pulled Noodles</span>
+        <span class="dish-sub">La Mian · Artisan craft</span>
+        <div class="dish-corner"></div>
+      </div>
+    </div>
+  </section>
 
-<!-- ── PRODUCTS ── -->
-<section class="products" id="products">
-  <div class="products-header">
-    <div class="section-tag">Our Offerings</div>
-    <h2 class="section-title">Crafted with <em>Pure Ingredients</em></h2>
-  </div>
-  <div class="products-grid">
+  <!-- SOUTH INDIAN -->
+  <section class="menu-section active" id="sec-south">
+    <div class="section-header">
+      <span class="section-emoji">🌴</span>
+      <h2 class="section-title">South Indian Specials</h2>
+      <p class="section-desc">Authentic flavours from the Southern kitchens of India</p>
+      <div class="section-divider">
+        <span></span><span class="gem"></span><span></span>
+      </div>
+    </div>
+    <div class="dish-grid">
+      <div class="dish-card featured">
+        <span class="dish-emoji">🥞</span>
+        <span class="dish-name">Masala Dosa <span class="badge">Classic</span></span>
+        <span class="dish-sub">Crisp crepe · Spiced potato</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🧈</span>
+        <span class="dish-name">Ghee Roast Dosa</span>
+        <span class="dish-sub">Golden &amp; fragrant</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🧀</span>
+        <span class="dish-name">Cheese Dosa</span>
+        <span class="dish-sub">Fusion delight</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍚</span>
+        <span class="dish-name">Idli <span style="color:var(--text-muted);font-size:0.85rem;">(2 pcs)</span></span>
+        <span class="dish-sub">Steamed rice cakes</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🥯</span>
+        <span class="dish-name">Medu Vada</span>
+        <span class="dish-sub">Crispy lentil fritters</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍛</span>
+        <span class="dish-name">Sambar Rice</span>
+        <span class="dish-sub">Comfort in a bowl</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍋</span>
+        <span class="dish-name">Lemon Rice</span>
+        <span class="dish-sub">Zesty &amp; light</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍲</span>
+        <span class="dish-name">South Indian Meals</span>
+        <span class="dish-sub">Full &amp; Mini thali</span>
+        <div class="dish-corner"></div>
+      </div>
+    </div>
+  </section>
 
-    <div class="product-card">
-      <div class="product-img-wrap">
-        <div class="product-img">🍮</div>
-      </div>
-      <div class="product-body">
-        <div class="product-label">Traditional · Artisan</div>
-        <div class="product-name">Homemade Sweets</div>
-        <div class="product-desc">Time-honored recipes passed through generations — halwa, laddoo, barfi and more, prepared with pure ghee and farm-fresh ingredients.</div>
-      </div>
-      <div class="product-footer">
-        <span class="product-tag">Freshly Made</span>
-        <a href="https://wa.me/919445002264?text=Hi!%20I'd%20like%20to%20order%20Homemade%20Sweets." class="product-order" target="_blank">Order</a>
+  <!-- NORTH INDIAN -->
+  <section class="menu-section active" id="sec-north">
+    <div class="section-header">
+      <span class="section-emoji">🍛</span>
+      <h2 class="section-title">North Indian Delights</h2>
+      <p class="section-desc">Rich gravies, tandoor-fired breads &amp; aromatic biryanis</p>
+      <div class="section-divider">
+        <span></span><span class="gem"></span><span></span>
       </div>
     </div>
+    <div class="dish-grid">
+      <div class="dish-card featured">
+        <span class="dish-emoji">🍗</span>
+        <span class="dish-name">Butter Chicken <span class="badge">Bestseller</span></span>
+        <span class="dish-sub">Velvety tomato &amp; cream</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🧀</span>
+        <span class="dish-name">Paneer Butter Masala</span>
+        <span class="dish-sub">Vegetarian indulgence</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍛</span>
+        <span class="dish-name">Dal Tadka</span>
+        <span class="dish-sub">Tempered golden lentils</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🫓</span>
+        <span class="dish-name">Butter Naan</span>
+        <span class="dish-sub">Tandoor-baked bread</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🧈</span>
+        <span class="dish-name">Tandoori Roti</span>
+        <span class="dish-sub">Whole wheat classic</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍚</span>
+        <span class="dish-name">Veg / Chicken Biryani</span>
+        <span class="dish-sub">Dum-cooked aromatic rice</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🥔</span>
+        <span class="dish-name">Aloo Gobi</span>
+        <span class="dish-sub">Spiced potato &amp; cauliflower</span>
+        <div class="dish-corner"></div>
+      </div>
+    </div>
+  </section>
 
-    <div class="product-card">
-      <div class="product-img-wrap" style="background: radial-gradient(circle at 50% 60%, #d4eac8, #7D9B6A);">
-        <div class="product-img">💪</div>
-      </div>
-      <div class="product-body">
-        <div class="product-label">Fitness · Wellness</div>
-        <div class="product-name">Protein Bites</div>
-        <div class="product-desc">Loaded with nuts, seeds, and natural protein sources — the perfect guilt-free snack to fuel your day and support your goals.</div>
-      </div>
-      <div class="product-footer">
-        <span class="product-tag">High Protein</span>
-        <a href="https://wa.me/919445002264?text=Hi!%20I'd%20like%20to%20order%20Protein%20Bites." class="product-order" target="_blank">Order</a>
+  <!-- ITALIAN -->
+  <section class="menu-section active" id="sec-italian">
+    <div class="section-header">
+      <span class="section-emoji">🍕</span>
+      <h2 class="section-title">Italian Classics</h2>
+      <p class="section-desc">Stone-baked pizzas, handmade pastas &amp; timeless Italian soul</p>
+      <div class="section-divider">
+        <span></span><span class="gem"></span><span></span>
       </div>
     </div>
+    <div class="dish-grid">
+      <div class="dish-card featured">
+        <span class="dish-emoji">🍕</span>
+        <span class="dish-name">Margherita Pizza <span class="badge">Chef's Pick</span></span>
+        <span class="dish-sub">San Marzano · Fresh mozzarella · Basil</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍕</span>
+        <span class="dish-name">Farmhouse Pizza</span>
+        <span class="dish-sub">Garden-fresh toppings</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍝</span>
+        <span class="dish-name">White Sauce Pasta</span>
+        <span class="dish-sub">Béchamel · Creamy &amp; rich</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍝</span>
+        <span class="dish-name">Red Sauce Pasta</span>
+        <span class="dish-sub">Pomodoro · Rustic Italian</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🧀</span>
+        <span class="dish-name">Lasagna</span>
+        <span class="dish-sub">Layered · Slow-baked</span>
+        <div class="dish-corner"></div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🥖</span>
+        <span class="dish-name">Garlic Bread</span>
+        <span class="dish-sub">Herb butter · Crisp &amp; golden</span>
+        <div class="dish-corner"></div>
+      </div>
+    </div>
+  </section>
 
-    <div class="product-card">
-      <div class="product-img-wrap" style="background: radial-gradient(circle at 50% 60%, #fce8c3, #d4a855);">
-        <div class="product-img">🌾</div>
-      </div>
-      <div class="product-body">
-        <div class="product-label">Crunchy · Energising</div>
-        <div class="product-name">Granola Bars</div>
-        <div class="product-desc">Wholesome oats, honey, dried fruits and seeds baked to golden perfection — a crunchy, satisfying bar you can feel good about.</div>
-      </div>
-      <div class="product-footer">
-        <span class="product-tag">No Preservatives</span>
-        <a href="https://wa.me/919445002264?text=Hi!%20I'd%20like%20to%20order%20Granola%20Bars." class="product-order" target="_blank">Order</a>
-      </div>
-    </div>
+</main>
 
-    <div class="product-card">
-      <div class="product-img-wrap" style="background: radial-gradient(circle at 50% 60%, #ffe6f2, #e08080);">
-        <div class="product-img">🌿</div>
-      </div>
-      <div class="product-body">
-        <div class="product-label">Nature's Best</div>
-        <div class="product-name">Natural Sweets</div>
-        <div class="product-desc">Sweetened only by nature — dates, jaggery, raw honey, and coconut sugar blend into irresistible confections free from refined sugars.</div>
-      </div>
-      <div class="product-footer">
-        <span class="product-tag">Zero Refined Sugar</span>
-        <a href="https://wa.me/919445002264?text=Hi!%20I'd%20like%20to%20order%20Natural%20Sweets." class="product-order" target="_blank">Order</a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ── ABOUT ── -->
-<section id="about" style="background: var(--cream);">
-  <div class="about">
-    <div class="about-visual">
-      <div class="about-card-main">🏠</div>
-      <div class="about-card-accent">
-        <div class="about-stat">100%</div>
-        <div class="about-stat-label">Homemade</div>
-      </div>
-    </div>
-    <div class="about-content">
-      <div class="section-tag">Our Story</div>
-      <h2 class="section-title">Made in a Home,<br><em>Delivered with Heart</em></h2>
-      <p class="about-text">DeliHeaven was born out of a simple belief — that the best food comes from a home kitchen, made with real ingredients and genuine care. Every product is crafted fresh, in small batches, without shortcuts.</p>
-      <div class="about-features">
-        <div class="feat">
-          <div class="feat-icon">🥣</div>
-          <div>
-            <div class="feat-title">Small-Batch Freshness</div>
-            <div class="feat-desc">We prepare in small quantities so every order is made to order and at its freshest.</div>
-          </div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon">🌱</div>
-          <div>
-            <div class="feat-title">Clean Ingredients Only</div>
-            <div class="feat-desc">No artificial colours, flavours or preservatives — ever. Just real, wholesome food.</div>
-          </div>
-        </div>
-        <div class="feat">
-          <div class="feat-icon">💛</div>
-          <div>
-            <div class="feat-title">Made with Love</div>
-            <div class="feat-desc">Each product carries the warmth of a home kitchen and the pride of handcrafted quality.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── WHY ── -->
-<section class="why" id="why">
-  <div class="section-tag">Why Choose Us</div>
-  <h2 class="section-title">The <em>DeliHeaven</em> Difference</h2>
-  <div class="why-grid">
-    <div class="why-item">
-      <span class="why-ico">🏡</span>
-      <h3>Home Kitchen Quality</h3>
-      <p>Prepared in a clean, loving home environment — the way grandma used to make it.</p>
-    </div>
-    <div class="why-item">
-      <span class="why-ico">🚫</span>
-      <h3>Zero Preservatives</h3>
-      <p>What you see is what you get. No hidden chemicals, no artificial additives — period.</p>
-    </div>
-    <div class="why-item">
-      <span class="why-ico">🌾</span>
-      <h3>Wholesome Nutrition</h3>
-      <p>Every bite is designed to nourish — high in natural goodness, low in empty calories.</p>
-    </div>
-    <div class="why-item">
-      <span class="why-ico">📦</span>
-      <h3>Custom Orders</h3>
-      <p>Bulk orders, gifting hampers, festive packs — we tailor everything to your needs.</p>
-    </div>
-    <div class="why-item">
-      <span class="why-ico">⚡</span>
-      <h3>Quick via WhatsApp</h3>
-      <p>Order in seconds on WhatsApp. No apps, no fuss — just a message and we're on it.</p>
-    </div>
-    <div class="why-item">
-      <span class="why-ico">❤️</span>
-      <h3>Made with Passion</h3>
-      <p>This isn't a factory. It's a passion project turned into your favourite snack destination.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── CTA ── -->
-<section class="cta-section" id="contact">
-  <h2>Ready to taste <em>Heaven?</em></h2>
-  <p>Place your order on WhatsApp — it's quick, easy, and absolutely delicious.</p>
-  <a href="https://wa.me/919445002264?text=Hi%20DeliHeaven!%20I'd%20like%20to%20place%20an%20order%20🍯" class="cta-wa" target="_blank">
-    <svg class="cta-wa-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#25D366"/>
-      <path d="M12.004 2.003C6.48 2.003 2 6.483 2 12.007c0 1.772.467 3.521 1.354 5.055L2 22l5.082-1.323A9.95 9.95 0 0012.004 22C17.527 22 22 17.52 22 11.996s-4.473-9.993-9.996-9.993zm0 18.19a8.214 8.214 0 01-4.21-1.155l-.302-.18-3.012.784.806-2.931-.197-.312A8.175 8.175 0 013.8 11.996c0-4.523 3.682-8.204 8.204-8.204s8.197 3.681 8.197 8.204c0 4.522-3.675 8.197-8.197 8.197z" fill="#25D366"/>
-    </svg>
-    Chat on WhatsApp — +91 94450 02264
-  </a>
-</section>
-
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <span class="logo">Deli<span>Heaven</span></span>
-      <p>Homemade goodness delivered to your door. Pure ingredients, real love, no shortcuts.</p>
-    </div>
-    <div class="footer-links">
-      <h4>Products</h4>
-      <ul>
-        <li><a href="#">Homemade Sweets</a></li>
-        <li><a href="#">Protein Bites</a></li>
-        <li><a href="#">Granola Bars</a></li>
-        <li><a href="#">Natural Sweets</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h4>Contact</h4>
-      <ul>
-        <li><a href="https://wa.me/919445002264" target="_blank">📱 +91 94450 02264</a></li>
-        <li><a href="#">📍 Chennai, Tamil Nadu</a></li>
-        <li><a href="https://wa.me/919445002264?text=Hi!%20I%20want%20to%20order." target="_blank">💬 Order on WhatsApp</a></li>
-      </ul>
-    </div>
+  <div class="brand-ornament" style="margin-bottom:16px;">
+    <span class="ornament-line"></span>
+    <span class="diamond"></span>
+    <span class="ornament-line" style="background:linear-gradient(90deg,transparent,var(--gold),transparent);"></span>
   </div>
-  <div class="footer-bottom">
-    <span>© 2025 DeliHeaven. All rights reserved.</span>
-    <span>Made with ❤️ for sweet souls everywhere</span>
-  </div>
+  <p class="foot-brand">Delish_us</p>
+  <p>Crafted with love &nbsp;·&nbsp; Served with elegance</p>
 </footer>
 
-<!-- ── FLOATING WHATSAPP ── -->
-<div class="wa-float">
-  <div class="wa-tooltip">Order on WhatsApp 🍯</div>
-  <a href="https://wa.me/919445002264?text=Hi%20DeliHeaven!%20I%27d%20like%20to%20place%20an%20order%20%F0%9F%8D%AF" class="wa-btn" target="_blank" aria-label="Chat on WhatsApp">
-    <svg class="wa-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-      <path d="M12.004 2.003C6.48 2.003 2 6.483 2 12.007c0 1.772.467 3.521 1.354 5.055L2 22l5.082-1.323A9.95 9.95 0 0012.004 22C17.527 22 22 17.52 22 11.996s-4.473-9.993-9.996-9.993zm0 18.19a8.214 8.214 0 01-4.21-1.155l-.302-.18-3.012.784.806-2.931-.197-.312A8.175 8.175 0 013.8 11.996c0-4.523 3.682-8.204 8.204-8.204s8.197 3.681 8.197 8.204c0 4.522-3.675 8.197-8.197 8.197z"/>
-    </svg>
-  </a>
-</div>
+<script>
+  const btns = document.querySelectorAll('.nav-btn');
+  const main = document.getElementById('menu-main');
+  const sections = {
+    chinese: document.getElementById('sec-chinese'),
+    south:   document.getElementById('sec-south'),
+    north:   document.getElementById('sec-north'),
+    italian: document.getElementById('sec-italian'),
+  };
 
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.target;
+
+      if (target === 'all') {
+        main.classList.add('show-all');
+        Object.values(sections).forEach(s => s.classList.add('active'));
+      } else {
+        main.classList.remove('show-all');
+        Object.values(sections).forEach(s => s.classList.remove('active'));
+        sections[target].classList.add('active');
+        sections[target].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Staggered card entrance on load
+  const cards = document.querySelectorAll('.dish-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = `sectionIn 0.5s ${i * 0.05}s ease both`;
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  cards.forEach(c => observer.observe(c));
+</script>
 </body>
 </html>
